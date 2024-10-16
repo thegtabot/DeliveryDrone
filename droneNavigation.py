@@ -6,13 +6,12 @@ def navigate_to(lat, lon, alt)
     cmds.clear()
 
     # Add multiple waypoints
-    waypoints = [
-        (lat1, lon1, alt),  # First delivery point
-        (lat2, lon2, alt2),  # Second delivery point
-        # Add more waypoints as needed
+    deliveryStack = [
+        [lat, lon, alt]  # Delivery points append here
+                             # Add more waypoints as needed
     ]
 
-    for lat, lon, alt in waypoints:
+    for lat, lon, alt in deliveryStack:
         wp = Command(0, 0, 0, Command.WAYPOINT, 0, 0, 0, 0, 0, 0, lat, lon, alt)
         cmds.add(wp)
 
