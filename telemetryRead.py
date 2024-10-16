@@ -3,7 +3,7 @@ import time
 
 # Connect to the vehicle (replace '127.0.0.1:14550' with your drone's connection string)
 # For Pixhawk over USB, you can use '/dev/ttyUSB0', 115200 for the baudrate.
-vehicle = connect('127.0.0.1:14550', wait_ready=True)
+vehicle = connect('/dev/ttyAMA0', wait_ready=True)
 
 def print_telemetry():
     while True:
