@@ -27,7 +27,7 @@ def arm():
     print("Vehicle can be armed.")
     vehicle.armed = True
 
-    while vehicle.armed == False
+    while vehicle.armed == False:
         print("Waiting for drone to become armed...")
         time.sleep(2)
     return None
