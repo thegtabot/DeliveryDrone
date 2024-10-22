@@ -1,10 +1,13 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager
 from models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from utils import geocode_address, send_delivery_request
+
+# Global variable to store the drone's latest GPS coordinates
+drone_location = {'latitude': 0, 'longitude': 0}
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -54,7 +57,27 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', username=current_user.username)
+
+# Fetch current drone location
+@app.route('/drone-location', methods=['GET'])
+@login_required
+def drone_location_api():
+    return jsonify(drone_location)
+
+# Update the drone's location (POST request sent by Raspberry Pi)
+@app.route('/update-drone-location', methods=['POST'])
+def update_drone_location():
+    global drone_location
+    try:
+        data = request.json
+        drone_location['latitude'] = data.get('latitude')
+        drone_location['longitude'] = data.get('longitude')
+        print(f"Updated drone location: {drone_location}")
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        print(f"Error updating location: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/set-location', methods=['POST'])
 @login_required

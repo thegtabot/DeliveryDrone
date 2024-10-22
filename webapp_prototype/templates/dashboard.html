@@ -2,23 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Drone Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .welcome {
+            font-size: 1.5em;
+        }
+        .logout-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome, {{ current_user.username }}</h1>
+    <div class="header">
+        <div class="welcome">Welcome, {{ username }}!</div>
+        <form action="{{ url_for('logout') }}" method="get">
+            <button class="logout-btn">Logout</button>
+        </form>
+    </div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 13);
 
-    <form action="{{ url_for('set_location') }}" method="POST">
-        <label for="address">Delivery Address:</label>
-        <input type="text" id="address" name="address" required>
-        <button type="submit">Update Location</button>
-    </form>
+        // Add map tiles (OpenStreetMap is free)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-    <form action="{{ url_for('place_order') }}" method="POST">
-        <button type="submit">Place Order</button>
-    </form>
+        // Marker for drone's current location
+        var marker = L.marker([0, 0]).addTo(map);
 
-    <a href="{{ url_for('logout') }}">Logout</a>
+        // Function to update marker position
+        function updateDronePosition(lat, lng) {
+            marker.setLatLng([lat, lng]); // Update marker position
+            map.setView([lat, lng], 13);  // Center map on drone
+        }
+
+        // Function to fetch drone coordinates from the backend
+        function fetchDroneData() {
+            fetch('/drone-location')
+                .then(response => response.json())
+                .then(data => {
+                    var lat = data.latitude;
+                    var lng = data.longitude;
+                    updateDronePosition(lat, lng);
+                })
+                .catch(error => console.error('Error fetching drone data:', error));
+        }
+
+        // Update drone location every 5 seconds
+        setInterval(fetchDroneData, 5000);
+    </script>
 </body>
 </html>
