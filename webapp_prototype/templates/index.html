@@ -11,29 +11,32 @@
 </head>
 <body>
 
+<h1>HOMEPAGE</h1>
+<!-- Hero Section -->
+<section id="home" class="hero">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1>Experience the Future of Delivery</h1>
+        <p>Fast, safe, and intelligent drone delivery right to your door.</p>
+        <a href="#track" class="hero-btn">Track Your Package</a>
+    </div>
+</section>
+
     <!-- Navigation Bar -->
     <nav>
-        <div class="logo">DroneDelivery</div>
+        
         <ul class="nav-links">
-            <a >HOMEPAGE</a>
+            <a>Navigator</a>
             <li><a href="#aboutus">About</a></li>
             <li><a href="{{ url_for('register') }}">Register</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="{{url_for('login')}}">Login</a></li>
         </ul>
         <div class="cta-button">
-            <a href="#track" class="btn">Track Now</a>
+            
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="overlay"></div>
-        <div class="hero-content">
-            <h1>Experience the Future of Delivery</h1>
-            <p>Fast, safe, and intelligent drone delivery right to your door.</p>
-            <a href="#track" class="hero-btn">Track Your Package</a>
-        </div>
-    </section>
+    
 
     <!-- Track Package Section -->
     <section id="track" class="track-section">
@@ -62,7 +65,7 @@
             <div class="feature-card">
                 <i class="fas fa-lock"></i>
                 <h3>Secure & Reliable</h3>
-                <p>Your package is safe with state-of-the-art security and monitoring.</p>
+                <p>Our AI powered intrusion detection systems ensure that your package and information are safeguarded.</p>
             </div>
         </div>
     </section>
