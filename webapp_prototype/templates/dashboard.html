@@ -63,41 +63,46 @@
             <button class="logout-btn">Logout</button>
         </form>
     </div>
-    <div id="map"></div>
-    
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 13);
+    <div id="map" style="height: 500px;"></div>
 
-        // Add map tiles (OpenStreetMap is free)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    // Initialize the map with a default view
+    var map = L.map('map').setView([0, 0], 13);
 
-        // Marker for drone's current location
-        var marker = L.marker([0, 0]).addTo(map);
+    // Add map tiles (OpenStreetMap is free)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-        // Function to update marker position
-        function updateDronePosition(lat, lng) {
-            marker.setLatLng([lat, lng]); // Update marker position
-            map.setView([lat, lng], 13);  // Center map on drone
-        }
+    // Marker for user's location
+    var marker = L.marker([0, 0]).addTo(map);
 
-        // Function to fetch drone coordinates from the backend
-        function fetchDroneData() {
-            fetch('/drone-location')
-                .then(response => response.json())
-                .then(data => {
+    // Function to update marker position on the map
+    function updateUserPosition(lat, lng) {
+        marker.setLatLng([lat, lng]); // Update marker position
+        map.setView([lat, lng], 13);  // Center map on user's location
+    }
+
+    // Function to fetch user's location from the backend
+    function fetchUserLocation() {
+        fetch('/get-coordinates')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
                     var lat = data.latitude;
                     var lng = data.longitude;
-                    updateDronePosition(lat, lng);
-                })
-                .catch(error => console.error('Error fetching drone data:', error));
-        }
+                    updateUserPosition(lat, lng);  // Update map with user's location
+                } else {
+                    console.error('Failed to get user location:', data.message);
+                }
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    }
 
-        // Update drone location every 5 seconds
-        setInterval(fetchDroneData, 5000);
-    </script>
+    // Fetch user location on page load
+    window.onload = fetchUserLocation;
+</script>
+
 </body>
 </html>

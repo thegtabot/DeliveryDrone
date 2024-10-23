@@ -117,9 +117,11 @@ def place_order():
 def get_coordinates():
     address = current_user.address  # Get the address of the logged-in user
     lat, lon = geocode_address(address)  # Get the GPS coordinates using the function above
-    
+    print("clicked")
     if lat and lon:
+        print("pressed")
         return jsonify({'status': 'success', 'latitude': lat, 'longitude': lon})
+        
     else:
         return jsonify({'status': 'error', 'message': 'Failed to get GPS coordinates'})
 
