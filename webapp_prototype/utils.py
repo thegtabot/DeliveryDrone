@@ -13,6 +13,7 @@ def geocode_address(address):
         lon = location['lng']
         return lat, lon
     else:
+        print("Error accessing google API.")
         return None, None
 
 def send_delivery_request(lat, lon):
