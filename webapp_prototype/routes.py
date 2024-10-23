@@ -110,6 +110,20 @@ def place_order():
 
     return redirect(url_for('dashboard'))
 
+
+
+@app.route('/get-coordinates', methods=['GET'])
+@login_required
+def get_coordinates():
+    address = current_user.address  # Get the address of the logged-in user
+    lat, lon = geocode_address(address)  # Get the GPS coordinates using the function above
+    
+    if lat and lon:
+        return jsonify({'status': 'success', 'latitude': lat, 'longitude': lon})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to get GPS coordinates'})
+
+
 @app.route('/logout')
 @login_required
 def logout():

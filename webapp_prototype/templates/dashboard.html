@@ -20,7 +20,7 @@
             font-size: 1.5em;
         }
         .logout-btn {
-            background-color: red;
+            background-color: black;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -32,6 +32,33 @@
 <body>
     <div class="header">
         <div class="welcome">Welcome, {{ username }}!</div>
+
+<!--GPS Test button -->
+        <button id="get-coordinates-btn">Get GPS Coordinates</button>
+
+        <p id="coordinates-output"></p>
+    
+        <script>
+            $(document).ready(function() {
+                $('#get-coordinates-btn').click(function() {
+                    $.ajax({
+                        url: '/get-coordinates',
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('#coordinates-output').text('Latitude: ' + response.latitude + ', Longitude: ' + response.longitude);
+                            } else {
+                                $('#coordinates-output').text('Failed to get GPS coordinates.');
+                            }
+                        },
+                        error: function() {
+                            $('#coordinates-output').text('An error occurred.');
+                        }
+                    });
+                });
+            });
+        </script>
+
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
         </form>

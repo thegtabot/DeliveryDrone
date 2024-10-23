@@ -1,7 +1,7 @@
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 import time
 
-def send_gps_target_to_drone(lat, lon, alt, connection_str='/dev/serial0', baudrate=57600):
+def send_gps_target_to_drone(lat, lon, alt, connection_str='/dev/AMA0', baudrate=57600):
     """
     Sends a command to the drone to fly to a specific GPS coordinate.
     

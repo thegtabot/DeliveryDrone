@@ -16,7 +16,7 @@ def geocode_address(address):
         return None, None
 
 def send_delivery_request(lat, lon):
-    pi_url = "http://raspberry-pi-ip/start_delivery"
+    pi_url = "10.0.0.2:5000"
     payload = {'lat': lat, 'lon': lon}
     response = requests.post(pi_url, json=payload)
     
