@@ -22,75 +22,69 @@
     </div>
 </section>
 
-    <!-- Navigation Bar -->
-    <nav>
-        
-        <ul class="nav-links">
-            <a>Navigator</a>
-            <li><a href="#aboutus">About</a></li>
-            <li><a href="{{ url_for('register') }}">Register</a></li>
-            <li><a href="{{url_for('login')}}">Login</a></li>
-        </ul>
-        <div class="cta-button">
-            
+<!-- Navigation Bar -->
+<nav>
+    <ul class="nav-links">
+        <a>Navigator</a>
+        <li><a href="#aboutus">About</a></li>
+        <li><a href="{{ url_for('register') }}">Register</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+    </ul>
+</nav>
+
+<!-- Track Package Section -->
+<section id="track" class="track-section">
+    <h2>Track Your Drone Delivery</h2>
+    <p>Enter your package ID to track its real-time location</p>
+    <form action="/track" method="POST">
+        <input type="text" name="package_id" placeholder="Enter your package ID" required>
+        <button type="submit" class="btn">Track Now</button>
+    </form>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+    <h2>Our Features</h2>
+    <div class="features-container">
+        <div class="feature-card">
+            <i class="fas fa-route"></i>
+            <h3>AI-Powered Routing</h3>
+            <p>Our AI calculates the fastest and safest routes for every delivery.</p>
         </div>
-    </nav>
-
-    
-
-    <!-- Track Package Section -->
-    <section id="track" class="track-section">
-        <h2>Track Your Drone Delivery</h2>
-        <p>Enter your package ID to track its real-time location</p>
-        <form action="/track" method="POST">
-            <input type="text" name="package_id" placeholder="Enter your package ID" required>
-            <button type="submit" class="btn">Track Now</button>
-        </form>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features-section">
-        <h2>Our Features</h2>
-        <div class="features-container">
-            <div class="feature-card">
-                <i class="fas fa-route"></i>
-                <h3>AI-Powered Routing</h3>
-                <p>Our AI calculates the fastest and safest routes for every delivery.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-clock"></i>
-                <h3>Real-Time Tracking</h3>
-                <p>Stay updated with live tracking of your package from dispatch to delivery.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-lock"></i>
-                <h3>Secure & Reliable</h3>
-                <p>Our AI powered intrusion detection systems ensure that your package and information are safeguarded.</p>
-            </div>
+        <div class="feature-card">
+            <i class="fas fa-clock"></i>
+            <h3>Real-Time Tracking</h3>
+            <p>Stay updated with live tracking of your package from dispatch to delivery.</p>
         </div>
-    </section>
+        <div class="feature-card">
+            <i class="fas fa-lock"></i>
+            <h3>Secure & Reliable</h3>
+            <p>Our AI powered intrusion detection systems ensure that your package and information are safeguarded.</p>
+        </div>
+    </div>
+</section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section">
-        <h2>Contact Us</h2>
-        <p>Have any questions? Reach out to us anytime.</p>
-        <form>
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Your Email" required>
-            <textarea placeholder="Your Message" required></textarea>
-            <button type="submit" class="btn">Send Message</button>
-        </form>
-    </section>
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+    <h2>Contact Us</h2>
+    <p>Have any questions? Reach out to us anytime.</p>
+    <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn">Send Message</button>
+    </form>
+</section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Drone Delivery Service. All rights reserved.</p>
-        <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-        </ul>
-    </footer>
+<!-- Footer -->
+<footer>
+    <p>&copy; 2024 Drone Delivery Service. All rights reserved.</p>
+    <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+    </ul>
+</footer>
 
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>

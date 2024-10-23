@@ -1,0 +1,169 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 1.6;
+    background-color: #e0f7fa; /* Light background color */
+}
+
+h1, h2, h3 {
+    color: #ffffff; /* White text for headings */
+}
+
+/* Hero Section */
+.hero {
+    background: url('https://example.com/your-image.jpg') no-repeat center center/cover;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+    z-index: 1;
+}
+
+.hero-btn {
+    background-color: #ff6200ea; /* Bright Button Color */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.hero-btn:hover {
+    background-color: #ffbb33; /* Lighter on Hover */
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #00796b; /* Teal color for navigation */
+    color: #fff;
+    padding: 15px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-links li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Track Package Section */
+.track-section {
+    padding: 50px 20px;
+    background-color: #ffffff; /* White background for contrast */
+    text-align: center;
+}
+
+.track-section .btn {
+    background-color: #ff6200ea; /* Bright Button Color */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.track-section .btn:hover {
+    background-color: #ffbb33; /* Lighter on Hover */
+}
+
+/* Features Section */
+.features-section {
+    padding: 50px 20px;
+    background-color: #3f51b5; /* Blue color for features section */
+    color: #fff;
+}
+
+.features-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 30%;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: scale(1.05);
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 50px 20px;
+    background-color: #ffffff; /* White background for contact section */
+    text-align: center;
+}
+
+.contact-section form {
+    max-width: 500px;
+    margin: auto;
+}
+
+.contact-section input,
+.contact-section textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+footer ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+footer ul li a {
+    color: #fff;
+    text-decoration: none;
+}
