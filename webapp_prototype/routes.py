@@ -27,7 +27,8 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         address = request.form.get('address')
-
+        
+        print(f"Debug: Address entered by the user: {address}")
         # Hash the password and create the user
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         new_user = User(username=username, password=hashed_password, address=address)
