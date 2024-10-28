@@ -9,6 +9,7 @@ def disable_failsafes():
     # Disable RC failsafe
     vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
     vehicle.parameters['RC_FAILSAFE'] = 0  # Disable RC failsafe
+    vehicle.parameters['FS_OPTIONS'] = 0 
 
     # Disable secondary compass failsafe
     vehicle.parameters['COMPASS_USE'] = 0  # Use only the primary compass
@@ -59,7 +60,17 @@ def main():
         print(" Vehicle is still armed, waiting to land...")
         time.sleep(1)
 
+        # Re-enable failsafe parameters
+    vehicle.parameters['FS_THR_ENABLE'] = 1  # Enable throttle failsafe
+    vehicle.parameters['FS_OPTIONS'] = 1      # Enable all failsafe options
+    vehicle.parameters['NAV_RCL_ACT'] = 1     # Enable return to launch on radio failsafe
+
+    vehicle.flush()
+
+
     print("Landed successfully!")
+
+    
 
 if __name__ == "__main__":
     main()
