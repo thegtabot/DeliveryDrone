@@ -2,27 +2,25 @@ from dronekit import connect, VehicleMode
 import time
 
 # Connect to the Vehicle on UART (GPIO) pins via ttyAMA0
-vehicle = connect('/dev/ttyAMA0', baud=57600, wait_ready=True)  # Adjust baud rate if necessary
+vehicle = connect('/dev/ttyAMA0', baud=57600, wait_ready=True)
 
 def disable_prearm_checks():
     """Disable specific pre-arm checks."""
     print("Disabling pre-arm checks...")
-
-    # Disable GPS checks
-    vehicle.parameters['GPS_AUTO_SWITCH'] = 1  # Set to 1 to auto-switch GPS sources if multiple are available
-    vehicle.parameters['GPS_TYPE'] = 1  # Set to use the GPS type you are using (if applicable)
-
-    # Disable compass checks
-    vehicle.parameters['COMPASS_USE2'] = 0  # Disable Compass 2
-    vehicle.parameters['COMPASS_ORIENT'] = 0  # Use default orientation if needed
-
-    # Disable altitude checks (optional)
     vehicle.parameters['ARMING_CHECK'] = 0  # Disable all arming checks; use with caution!
 
-    # Verify changes
-    print("GPS_AUTO_SWITCH set to:", vehicle.parameters['GPS_AUTO_SWITCH'])
-    print("COMPASS_USE2 set to:", vehicle.parameters['COMPASS_USE2'])
-    print("ARMING_CHECK set to:", vehicle.parameters['ARMING_CHECK'])
+def disable_radio_failsafe():
+    """Disable radio failsafe parameters."""
+    print("Disabling radio failsafe...")
+    vehicle.parameters['FS_LOSS_ACTION'] = 0  # 0: No action on loss of radio signal
+    vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofencing
+
+def wait_for_gps_fix():
+    """Wait until the vehicle has a GPS fix."""
+    while vehicle.gps_0.fix_type < 2:  # Wait for at least a 2D fix
+        print("Waiting for GPS fix...")
+        time.sleep(1)
+    print("GPS fix obtained.")
 
 def arm_and_takeoff(target_altitude):
     """Arms the vehicle and flies to a target altitude."""
@@ -50,6 +48,12 @@ def arm_and_takeoff(target_altitude):
 try:
     # Disable pre-arm checks
     disable_prearm_checks()
+
+    # Disable radio failsafe
+    disable_radio_failsafe()
+
+    # Wait for GPS fix
+    wait_for_gps_fix()
 
     # Arm and take off to 1 meter (approximately 3 feet)
     arm_and_takeoff(1)
