@@ -4,6 +4,7 @@ import time
 # Connect to the Vehicle via UART GPIO
 connection_string = '/dev/ttyAMA0'  # Set to /dev/ttyAMA0 for UART connection
 vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
+print("Connected to vehicle:", vehicle)
 def disable_failsafes():
     try:
         vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
@@ -33,7 +34,7 @@ def arm_and_takeoff(target_altitude):
     while vehicle.mode.name != "GUIDED":  # Wait until mode has changed
         print(" Waiting for mode change to GUIDED...")
         time.sleep(1)
-        
+
     vehicle.arm()
     print("Vehicle is now armed. Mode set to GUIDED.")
     time.sleep(3)
