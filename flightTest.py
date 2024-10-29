@@ -25,7 +25,7 @@ def disable_failsafes():
 def arm_and_takeoff(target_altitude):
     # Wait for the vehicle to initialize
     while not vehicle.is_armable:
-         print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}, Mode: {vehicle.mode.name}")
+        print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}, Mode: {vehicle.mode.name}")
         time.sleep(1)
 
     # Arm the vehicle
