@@ -28,6 +28,7 @@ def disable_failsafes():
         vehicle.parameters['COMPASS_USE'] = 0  # Use only the primary compass
     except Exception as e:
         print(f"Error disabling COMPASS_USE: {e}")
+    vehicle.parameters['ARMING_CHECK'] = 0
     
 
 
@@ -43,7 +44,6 @@ def arm_and_takeoff(target_altitude):
         time.sleep(1)
 
     # Arm the vehicle
-    vehicle.parameters['ARMING_CHECK'] = 0
     vehicle.arm()
     print("Vehicle is now armed. Mode set to GUIDED.")
     time.sleep(3)
