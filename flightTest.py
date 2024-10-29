@@ -6,13 +6,22 @@ connection_string = '/dev/ttyAMA0'  # Set to /dev/ttyAMA0 for UART connection
 vehicle = connect(connection_string, baud=57600, wait_ready=True)
 
 def disable_failsafes():
-    # Disable RC failsafe
-    vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
-    vehicle.parameters['RC_FAILSAFE'] = 0  # Disable RC failsafe
-    vehicle.parameters['FS_OPTIONS'] = 0 
-
-    # Disable secondary compass failsafe
-    vehicle.parameters['COMPASS_USE'] = 0  # Use only the primary compass
+    try:
+        vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
+    except Exception as e:
+        print(f"Error disabling FENCE_ENABLE: {e}")
+    try:
+        vehicle.parameters['RC_FAILSAFE'] = 0  # Disable RC failsafe
+    except Exception as e:
+        print(f"Error disabling RC_FAILSAFE: {e}")
+    try:
+        vehicle.parameters['FS_OPTIONS'] = 0 
+    except Exception as e:
+        print(f"Error disabling FS_OPTIONS: {e}")
+    try:
+        vehicle.parameters['COMPASS_USE'] = 0  # Use only the primary compass
+    except Exception as e:
+        print(f"Error disabling COMPASS_USE: {e}")
 
 def arm_and_takeoff(target_altitude):
     # Wait for the vehicle to initialize
