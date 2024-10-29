@@ -24,6 +24,63 @@ h1, h2, h3 {
     text-align: center;
 }
 
+/* Dark mode for the login page */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+/* Dark mode for the login box */
+body.dark-mode .login-box {
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark mode for headings */
+body.dark-mode .login-box h2 {
+    color: #ffffff;
+}
+
+/* Dark mode for input fields */
+body.dark-mode .input-group input {
+    background-color: #444;
+    color: #ffffff;
+    border: 1px solid #555;
+}
+
+/* Dark mode for labels */
+body.dark-mode .input-group label {
+    color: #e0e0e0;
+}
+
+/* Dark mode for icons inside input groups */
+body.dark-mode .input-group .icon {
+    color: #cccccc;
+}
+
+/* Dark mode for buttons */
+body.dark-mode .btn {
+    background-color: #555;
+    color: #ffffff;
+    border: none;
+}
+
+body.dark-mode .btn:hover {
+    background-color: #666;
+}
+
+/* Dark mode for flash messages */
+body.dark-mode .flash-message {
+    background-color: #444;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
 .overlay {
     position: absolute;
     top: 0;
@@ -167,3 +224,5 @@ footer ul li a {
     color: #fff;
     text-decoration: none;
 }
+
+
