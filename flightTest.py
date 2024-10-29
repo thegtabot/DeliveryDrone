@@ -19,7 +19,7 @@ def disable_failsafes():
     except Exception as e:
         print(f"Error disabling RC_FAILSAFE: {e}")
     """
-    
+
     try:
         vehicle.parameters['FS_OPTIONS'] = 0 
     except Exception as e:
@@ -31,12 +31,13 @@ def disable_failsafes():
 
 def arm_and_takeoff(target_altitude):
     # Wait for the vehicle to initialize
+    vehicle.mode = VehicleMode("GUIDED")
     while not vehicle.is_armable:
         print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}, Mode: {vehicle.mode.name}")
         time.sleep(1)
 
     # Arm the vehicle
-    vehicle.mode = VehicleMode("GUIDED")
+    
     while vehicle.mode.name != "GUIDED":  # Wait until mode has changed
         print(" Waiting for mode change to GUIDED...")
         time.sleep(1)
