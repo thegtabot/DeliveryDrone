@@ -28,20 +28,21 @@ def disable_failsafes():
         vehicle.parameters['COMPASS_USE'] = 0  # Use only the primary compass
     except Exception as e:
         print(f"Error disabling COMPASS_USE: {e}")
+    vehicle.parameters['ARMING_CHECK'] = 0
+
 
 def arm_and_takeoff(target_altitude):
     # Wait for the vehicle to initialize
     vehicle.mode = VehicleMode("GUIDED")
+    while vehicle.mode.name != "GUIDED":  # Wait until mode has changed
+        print(" Waiting for mode change to GUIDED...")
+        time.sleep(1)
+
     while not vehicle.is_armable:
         print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}, Mode: {vehicle.mode.name}")
         time.sleep(1)
 
     # Arm the vehicle
-    
-    while vehicle.mode.name != "GUIDED":  # Wait until mode has changed
-        print(" Waiting for mode change to GUIDED...")
-        time.sleep(1)
-
     vehicle.arm()
     print("Vehicle is now armed. Mode set to GUIDED.")
     time.sleep(3)
