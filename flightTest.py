@@ -7,7 +7,7 @@ vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
 
 def disable_failsafes():
     print("Connected to vehicle:", vehicle)
-
+    
     try:
         vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
     except Exception as e:
@@ -60,7 +60,7 @@ def arm_and_takeoff(target_altitude):
         time.sleep(1)
 
 def main():
-    target_altitude = 100  # Target altitude in feet
+    target_altitude = 2  # Target altitude in feet
     target_altitude_meters = target_altitude * 0.3048  # Convert feet to meters
 
     disable_failsafes()  # Disable the failsafes
