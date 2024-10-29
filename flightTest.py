@@ -3,8 +3,7 @@ import time
 
 # Connect to the Vehicle via UART GPIO
 connection_string = '/dev/ttyAMA0'  # Set to /dev/ttyAMA0 for UART connection
-vehicle = connect(connection_string, baud=57600, wait_ready=True)
-
+vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
 def disable_failsafes():
     try:
         vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
@@ -26,12 +25,14 @@ def disable_failsafes():
 def arm_and_takeoff(target_altitude):
     # Wait for the vehicle to initialize
     while not vehicle.is_armable:
-        print(" Waiting for vehicle to initialize...")
+         print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}, Mode: {vehicle.mode.name}")
         time.sleep(1)
 
     # Arm the vehicle
     vehicle.mode = VehicleMode("GUIDED")
     vehicle.arm()
+    print("Vehicle is now armed. Mode set to GUIDED.")
+    time.sleep(3)
 
     # Confirm the vehicle is armed
     while not vehicle.armed:
