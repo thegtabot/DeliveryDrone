@@ -4,8 +4,10 @@ import time
 # Connect to the Vehicle via UART GPIO
 connection_string = '/dev/ttyAMA0'  # Set to /dev/ttyAMA0 for UART connection
 vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
-print("Connected to vehicle:", vehicle)
+
 def disable_failsafes():
+    print("Connected to vehicle:", vehicle)
+    
     try:
         vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
     except Exception as e:
