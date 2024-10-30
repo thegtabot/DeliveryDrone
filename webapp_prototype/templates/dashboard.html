@@ -27,15 +27,28 @@
             cursor: pointer;
             font-size: 1em;
         }
+        /* Marketplace styles */
+        #marketplace {
+            margin-top: 20px;
+        }
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        #cart {
+            margin-top: 20px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="welcome">Welcome, {{ username }}!</div>
 
-<!--GPS Test button -->
+        <!-- GPS Test Button -->
         <button id="get-coordinates-btn">Get GPS Coordinates</button>
-
         <p id="coordinates-output"></p>
     
         <script>
@@ -59,50 +72,110 @@
             });
         </script>
 
+        <h2> 
+
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
         </form>
     </div>
-    <div id="map" style="height: 500px;"></div>
 
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<script>
-    // Initialize the map with a default view
-    var map = L.map('map').setView([0, 0], 13);
+    <!-- Map Section -->
+    <div id="map"></div>
 
-    // Add map tiles (OpenStreetMap is free)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    <!-- Marketplace Section -->
+    <div id="marketplace">
+        <h2>Marketplace</h2>
+        <div id="products">
+            <!-- Example Product -->
+            <div class="product">
+                <h3>Drone Battery</h3>
+                <p>High-capacity battery for extended drone flights.</p>
+                <p>Price: $50</p>
+                <button onclick="addToCart('Drone Battery', 50)">Add to Cart</button>
+            </div>
+            <div class="product">
+                <h3>Propeller Set</h3>
+                <p>Durable and lightweight propellers for smooth flight.</p>
+                <p>Price: $15</p>
+                <button onclick="addToCart('Propeller Set', 15)">Add to Cart</button>
+            </div>
+            <!-- Add more products as needed -->
+             <div class = "product">
+                <h3> Engineering Degree </h3>
+                <p> It's dangerous to go alone! Take this incredibly expensive bachelor's degree! </p>
+                <p>Price: $90000</p>
+                <button onclick="addToCart('Engineering Degree', 90000)">Add to Cart</button>
+             </div>
+        </div>
+    </div>
 
-    // Marker for user's location
-    var marker = L.marker([0, 0]).addTo(map);
+    <!-- Cart Section -->
+    <div id="cart">
+        <h3>Cart</h3>
+        <!-- Cart items will be displayed here -->
+    </div>
 
-    // Function to update marker position on the map
-    function updateUserPosition(lat, lng) {
-        marker.setLatLng([lat, lng]); // Update marker position
-        map.setView([lat, lng], 13);  // Center map on user's location
-    }
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map with a default view
+        var map = L.map('map').setView([0, 0], 13);
 
-    // Function to fetch user's location from the backend
-    function fetchUserLocation() {
-        fetch('/get-coordinates')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    var lat = data.latitude;
-                    var lng = data.longitude;
-                    updateUserPosition(lat, lng);  // Update map with user's location
-                } else {
-                    console.error('Failed to get user location:', data.message);
-                }
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
+        // Add map tiles (OpenStreetMap is free)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-    // Fetch user location on page load
-    window.onload = fetchUserLocation;
-</script>
+        // Marker for user's location
+        var marker = L.marker([0, 0]).addTo(map);
+
+        // Function to update marker position on the map
+        function updateUserPosition(lat, lng) {
+            marker.setLatLng([lat, lng]); // Update marker position
+            map.setView([lat, lng], 13);  // Center map on user's location
+        }
+
+        // Function to fetch user's location from the backend
+        function fetchUserLocation() {
+            fetch('/get-coordinates')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        var lat = data.latitude;
+                        var lng = data.longitude;
+                        updateUserPosition(lat, lng);  // Update map with user's location
+                    } else {
+                        console.error('Failed to get user location:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error fetching user data:', error));
+        }
+
+        // Fetch user location on page load
+        window.onload = fetchUserLocation;
+
+        // Marketplace functionality
+        let cart = [];
+
+        function addToCart(productName, price) {
+            const item = { productName, price };
+            cart.push(item);
+            alert(`${productName} has been added to your cart.`);
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartElement = document.getElementById('cart');
+            cartElement.innerHTML = ''; // Clear the previous display
+            cart.forEach((item, index) => {
+                cartElement.innerHTML += `<p>${item.productName} - $${item.price} <button onclick="removeFromCart(${index})">Remove</button></p>`;
+            });
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1); // Remove item from cart
+            updateCartDisplay();
+        }
+    </script>
 
 </body>
 </html>
