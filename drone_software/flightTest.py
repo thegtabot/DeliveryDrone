@@ -7,13 +7,13 @@ vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
 
 def disable_failsafes():
     print("Connected to vehicle:", vehicle)
-    
+    '''
     try:
         vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
     except Exception as e:
         print(f"Error disabling FENCE_ENABLE: {e}")
     
-    
+    '''
     try:
         vehicle.parameters['RC_FAILSAFE'] = 0  # Disable RC failsafe
     except Exception as e:
@@ -34,8 +34,8 @@ def disable_failsafes():
 
 def arm_and_takeoff(target_altitude):
     # Wait for the vehicle to initialize
-    vehicle.mode = VehicleMode("GUIDED")
-    while vehicle.mode.name != "GUIDED":  # Wait until mode has changed
+    vehicle.mode = VehicleMode("LOITER")
+    while vehicle.mode.name != "LOITER":  # Wait until mode has changed
         print(" Waiting for mode change to GUIDED...")
         time.sleep(1)
 
