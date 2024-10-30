@@ -35,8 +35,10 @@ def disable_failsafes():
 def arm_and_takeoff(target_altitude):
     # Wait for the vehicle to initialize
     vehicle.mode = VehicleMode("LOITER")
+    print("GPS Status:", vehicle.gps_0)
+
     while vehicle.mode.name != "LOITER":  # Wait until mode has changed
-        print(" Waiting for mode change to GUIDED...")
+        print(" Waiting for mode change to LOITER...")
         time.sleep(1)
 
     while not vehicle.is_armable:
