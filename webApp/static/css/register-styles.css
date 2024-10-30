@@ -1,0 +1,177 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Hero background gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Overlay */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay for contrast */
+}
+
+.container {
+    z-index: 1; /* Bring content to the front */
+}
+
+/* Registration Box Styles */
+.registration-box {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white for modern look */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    padding: 2rem;
+    width: 350px; /* Fixed width */
+    text-align: center; /* Center text */
+}
+
+/* Headings */
+h2 {
+    color: #1a1a1a; /* Darker text for better readability */
+    margin-bottom: 1rem;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333; /* Darker label color */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem; /* Increased padding */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+    transition: box-shadow 0.3s ease; /* Smooth transition */
+}
+
+.input-group input:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(37, 117, 252, 0.7); /* Glow effect on focus */
+}
+
+/* Button Styles */
+.register-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #2575fc; /* Button color matching the background */
+    color: white; /* White text for contrast */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+.register-btn:hover {
+    background-color: #1e5cb7; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Home Button Styles */
+.home-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #00d4ff; /* Distinct color for visibility */
+    color: #ffffff; /* White text */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    margin-top: 1rem; /* Space above the button */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+.home-btn:hover {
+    background-color: #00a3cc; /* Darker shade on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Paragraphs */
+p {
+    margin-top: 1rem;
+    color: #555; /* Subtle text color */
+}
+
+/* Login Link Styles */
+.login-link {
+    margin-top: 1rem;
+    color: #555; /* Subtle text color */
+}
+
+.login-link a {
+    color: #2575fc; /* Link color matching button */
+    text-decoration: none; /* Remove underline */
+}
+
+.login-link a:hover {
+    text-decoration: underline; /* Underline on hover for clarity */
+}
+
+/* Footer Styles */
+.footer {
+    position: fixed;
+    bottom: 10px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background: #121212; /* Dark background */
+    color: #ffffff; /* Light text color */
+}
+
+.dark-mode .registration-box {
+    background-color: rgba(50, 50, 50, 0.9); /* Darker box background */
+    color: #ffffff; /* Light text color */
+}
+
+.dark-mode .input-group input {
+    background-color: #333; /* Dark input background */
+    color: #ffffff; /* Light text color */
+}
+
+.dark-mode .login-link {
+    color: #bbbbbb; /* Light text color for links */
+}
+
+.dark-mode .footer {
+    color: #bbbbbb; /* Light footer text */
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    position: absolute; /* Positioning the button */
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    background-color: transparent; /* No background */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor */
+    color: #ffffff; /* Icon color for dark mode */
+    font-size: 24px; /* Adjust icon size */
+    z-index: 2; /* Ensure it's above other content */
+}
