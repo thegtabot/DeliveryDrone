@@ -107,6 +107,7 @@
                 <button onclick="addToCart('Engineering Degree', 90000)">Add to Cart</button>
              </div>
         </div>
+        
     </div>
 
     <!-- Cart Section -->
@@ -114,6 +115,33 @@
         <h3>Cart</h3>
         <!-- Cart items will be displayed here -->
     </div>
+    <!-- Order Button-->
+    <button onclick="placeOrder()">Order Now</button>
+
+    <script>
+        function placeOrder() {
+            fetch('{{ url_for("place_order") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cart: cart })  // Replace with your actual cart data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Order placed successfully!');
+                    cart = [];  // Clear cart
+                    updateCartDisplay();
+                } else {
+                    alert('Failed to place order.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        </script>
+
+
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>

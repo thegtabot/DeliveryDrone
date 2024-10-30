@@ -1,10 +1,11 @@
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash, jsonify, Flask 
 from flask_login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager
 from models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from utils import geocode_address, send_delivery_request
+import sqlite3 
 
 # Global variable to store the drone's latest GPS coordinates
 drone_location = {'latitude': 0, 'longitude': 0}
@@ -94,7 +95,7 @@ def set_location():
     flash('Location updated successfully!')
     return redirect(url_for('dashboard'))
 
-@app.route('/order', methods=['POST'])
+@app.route('/place_order', methods=['POST'])
 @login_required
 def place_order():
     if not current_user.lat or not current_user.lon:
