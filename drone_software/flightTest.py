@@ -13,12 +13,12 @@ def disable_failsafes():
     except Exception as e:
         print(f"Error disabling FENCE_ENABLE: {e}")
     
-    """
+    
     try:
         vehicle.parameters['RC_FAILSAFE'] = 0  # Disable RC failsafe
     except Exception as e:
         print(f"Error disabling RC_FAILSAFE: {e}")
-    """
+    
 
     try:
         vehicle.parameters['FS_OPTIONS'] = 0 

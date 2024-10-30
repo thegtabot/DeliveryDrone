@@ -6,9 +6,10 @@
     <title>Drone Dashboard</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
-        #map {
+        #user-map, #drone-map {
             height: 500px;
             width: 100%;
+            margin-bottom: 20px;
         }
         .header {
             display: flex;
@@ -46,47 +47,26 @@
 <body>
     <div class="header">
         <div class="welcome">Welcome, {{ username }}!</div>
-
-        <!-- GPS Test Button -->
         <button id="get-coordinates-btn">Get GPS Coordinates</button>
         <p id="coordinates-output"></p>
     
-        <script>
-            $(document).ready(function() {
-                $('#get-coordinates-btn').click(function() {
-                    $.ajax({
-                        url: '/get-coordinates',
-                        method: 'GET',
-                        success: function(response) {
-                            if (response.status === 'success') {
-                                $('#coordinates-output').text('Latitude: ' + response.latitude + ', Longitude: ' + response.longitude);
-                            } else {
-                                $('#coordinates-output').text('Failed to get GPS coordinates.');
-                            }
-                        },
-                        error: function() {
-                            $('#coordinates-output').text('An error occurred.');
-                        }
-                    });
-                });
-            });
-        </script>
-
-        <h2> 
-
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
         </form>
     </div>
 
-    <!-- Map Section -->
-    <div id="map"></div>
+    <!-- Map Sections -->
+    <h2>Your Location</h2>
+    <div id="user-map"></div>
+
+    <h2>Drone Location</h2>
+    <div id="drone-map"></div>
 
     <!-- Marketplace Section -->
     <div id="marketplace">
         <h2>Marketplace</h2>
         <div id="products">
-            <!-- Example Product -->
+            <!-- Example Products -->
             <div class="product">
                 <h3>Drone Battery</h3>
                 <p>High-capacity battery for extended drone flights.</p>
@@ -99,78 +79,41 @@
                 <p>Price: $15</p>
                 <button onclick="addToCart('Propeller Set', 15)">Add to Cart</button>
             </div>
-            <!-- Add more products as needed -->
-             <div class = "product">
-                <h3> Engineering Degree </h3>
-                <p> It's dangerous to go alone! Take this incredibly expensive bachelor's degree! </p>
+            <div class="product">
+                <h3>Engineering Degree</h3>
+                <p>It's dangerous to go alone! Take this incredibly expensive bachelor's degree!</p>
                 <p>Price: $90000</p>
                 <button onclick="addToCart('Engineering Degree', 90000)">Add to Cart</button>
-             </div>
+            </div>
         </div>
-        
     </div>
 
     <!-- Cart Section -->
     <div id="cart">
         <h3>Cart</h3>
-        <!-- Cart items will be displayed here -->
     </div>
-    <!-- Order Button-->
     <button onclick="placeOrder()">Order Now</button>
-
-    <script>
-        function placeOrder() {
-            fetch('{{ url_for("place_order") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ cart: cart })  // Replace with your actual cart data
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert('Order placed successfully!');
-                    cart = [];  // Clear cart
-                    updateCartDisplay();
-                } else {
-                    alert('Failed to place order.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-        </script>
-
-
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Initialize the map with a default view
-        var map = L.map('map').setView([0, 0], 13);
-
-        // Add map tiles (OpenStreetMap is free)
+        // Initialize the user map
+        var userMap = L.map('user-map').setView([0, 0], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+        }).addTo(userMap);
+        var userMarker = L.marker([0, 0]).addTo(userMap);
 
-        // Marker for user's location
-        var marker = L.marker([0, 0]).addTo(map);
-
-        // Function to update marker position on the map
         function updateUserPosition(lat, lng) {
-            marker.setLatLng([lat, lng]); // Update marker position
-            map.setView([lat, lng], 13);  // Center map on user's location
+            userMarker.setLatLng([lat, lng]);
+            userMap.setView([lat, lng], 13);
         }
 
-        // Function to fetch user's location from the backend
         function fetchUserLocation() {
             fetch('/get-coordinates')
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        var lat = data.latitude;
-                        var lng = data.longitude;
-                        updateUserPosition(lat, lng);  // Update map with user's location
+                        updateUserPosition(data.latitude, data.longitude);
                     } else {
                         console.error('Failed to get user location:', data.message);
                     }
@@ -178,8 +121,36 @@
                 .catch(error => console.error('Error fetching user data:', error));
         }
 
-        // Fetch user location on page load
-        window.onload = fetchUserLocation;
+        // Initialize the drone map
+        var droneMap = L.map('drone-map').setView([0, 0], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(droneMap);
+        var droneMarker = L.marker([0, 0]).addTo(droneMap);
+
+        function updateDronePosition(lat, lng) {
+            droneMarker.setLatLng([lat, lng]);
+            droneMap.setView([lat, lng], 13);
+        }
+
+        function fetchDroneLocation() {
+            fetch('/get-drone-coordinates')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        updateDronePosition(data.latitude, data.longitude);
+                    } else {
+                        console.error('Failed to get drone location:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error fetching drone data:', error));
+        }
+
+        // Fetch both locations on page load
+        window.onload = function() {
+            fetchUserLocation();
+            fetchDroneLocation();
+        };
 
         // Marketplace functionality
         let cart = [];
@@ -193,17 +164,37 @@
 
         function updateCartDisplay() {
             const cartElement = document.getElementById('cart');
-            cartElement.innerHTML = ''; // Clear the previous display
+            cartElement.innerHTML = '';
             cart.forEach((item, index) => {
                 cartElement.innerHTML += `<p>${item.productName} - $${item.price} <button onclick="removeFromCart(${index})">Remove</button></p>`;
             });
         }
 
         function removeFromCart(index) {
-            cart.splice(index, 1); // Remove item from cart
+            cart.splice(index, 1);
             updateCartDisplay();
         }
-    </script>
 
+        function placeOrder() {
+            fetch('{{ url_for("place_order") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cart: cart })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Order placed successfully!');
+                    cart = [];
+                    updateCartDisplay();
+                } else {
+                    alert('Failed to place order.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>
