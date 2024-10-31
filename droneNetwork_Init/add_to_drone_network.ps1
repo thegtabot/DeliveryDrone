@@ -1,5 +1,6 @@
 # Variables
-$wgConfigPath = "C:\Program Files\WireGuard\Data\Configurations"  # Default WireGuard config path
+# Default WireGuard config path
+$wgConfigPath = Join-Path -Path $userProfile -ChildPath "OneDrive\Documents\GitHub\DeliveryDrone\drone_network_config\DRONE.conf" 
 
 # Get the device name
 $newDeviceName = $env:COMPUTERNAME  # Use the system's hostname as the device name
