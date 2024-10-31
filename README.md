@@ -17,7 +17,11 @@ This is open source software written for drones operating on raspberry pi + pixh
 
 Instructions on adding a device to the  internal drone virtual private network (ID-VPN) for Windows devices: 
 
+
 Part One: 
+
+
+
 ![Screenshot 2024-10-31 171423](https://github.com/user-attachments/assets/78969d80-d1bd-4fc5-beb2-f8cad7befaf0)
 
 
