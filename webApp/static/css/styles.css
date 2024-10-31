@@ -1,213 +1,106 @@
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    color: #333;
-    line-height: 1.6;
-    background-color: #e0f7fa; /* Light background color */
-}
-
-h1, h2, h3 {
-    color: #ffffff; /* White text for headings */
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff; /* Light background for clarity */
+    color: #333; /* Default text color */
 }
 
 /* Hero Section */
 .hero {
-    background: url('https://example.com/your-image.jpg') no-repeat center center/cover;
-    position: relative;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white; /* White text for contrast */
+    padding: 5rem 1rem; /* Responsive padding */
+    text-align: center; /* Center text */
 }
 
-/* Dark mode for the login page */
-body.dark-mode {
-    background-color: #1a1a1a;
-    color: #e0e0e0;
+/* Section Styles */
+.section {
+    padding: 3rem 1rem; /* Consistent padding */
+    text-align: center; /* Center text */
 }
 
-/* Dark mode for the login box */
-body.dark-mode .login-box {
-    background-color: #333;
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+/* Headings */
+h2 {
+    color: #1a1a1a; /* Darker text for readability */
+    margin-bottom: 1rem;
 }
 
-/* Dark mode for headings */
-body.dark-mode .login-box h2 {
-    color: #ffffff;
+/* Input Groups */
+.input-group {
+    margin-bottom: 1.5rem;
 }
 
-/* Dark mode for input fields */
-body.dark-mode .input-group input {
-    background-color: #444;
-    color: #ffffff;
-    border: 1px solid #555;
-}
-
-/* Dark mode for labels */
-body.dark-mode .input-group label {
-    color: #e0e0e0;
-}
-
-/* Dark mode for icons inside input groups */
-body.dark-mode .input-group .icon {
-    color: #cccccc;
-}
-
-/* Dark mode for buttons */
-body.dark-mode .btn {
-    background-color: #555;
-    color: #ffffff;
-    border: none;
-}
-
-body.dark-mode .btn:hover {
-    background-color: #666;
-}
-
-/* Dark mode for flash messages */
-body.dark-mode .flash-message {
-    background-color: #444;
-    color: #ffffff;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.hero-content {
-    z-index: 1;
-}
-
-.hero-btn {
-    background-color: #ff6200ea; /* Bright Button Color */
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.3s ease;
-}
-
-.hero-btn:hover {
-    background-color: #ffbb33; /* Lighter on Hover */
-}
-
-/* Navigation Bar */
-nav {
-    background-color: #00796b; /* Teal color for navigation */
-    color: #fff;
-    padding: 15px;
-    position: fixed;
+.input-group input,
+.input-group textarea {
     width: 100%;
-    top: 0;
-    z-index: 1000;
+    padding: 1rem; /* Increased padding */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    transition: box-shadow 0.3s ease; /* Smooth transition */
 }
 
-.nav-links {
-    list-style: none;
-    padding: 0;
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(37, 117, 252, 0.7); /* Glow effect on focus */
 }
 
-.nav-links li {
-    display: inline;
-    margin-right: 20px;
-}
-
-.nav-links a {
-    color: #fff;
-    text-decoration: none;
-}
-
-/* Track Package Section */
-.track-section {
-    padding: 50px 20px;
-    background-color: #ffffff; /* White background for contrast */
-    text-align: center;
-}
-
-.track-section .btn {
-    background-color: #ff6200ea; /* Bright Button Color */
-    color: #fff;
-    padding: 10px 20px;
+/* Button Styles */
+.btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #2575fc; /* Button color */
+    color: white; /* White text for contrast */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+    margin: 0.5rem 0; /* Space between buttons */
 }
 
-.track-section .btn:hover {
-    background-color: #ffbb33; /* Lighter on Hover */
+.btn:hover {
+    background-color: #1e5cb7; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Additional Button Styles for Login and Register */
+.btn.secondary {
+    background-color: #00d4ff; /* Distinct color for visibility */
+}
+
+.btn.secondary:hover {
+    background-color: #00a3cc; /* Darker shade on hover */
 }
 
 /* Features Section */
-.features-section {
-    padding: 50px 20px;
-    background-color: #3f51b5; /* Blue color for features section */
-    color: #fff;
-}
-
 .features-container {
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid layout */
+    gap: 2rem; /* Space between cards */
+    margin-top: 2rem; /* Space above features */
 }
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 30%;
-    transition: transform 0.3s ease;
-}
-
-.feature-card:hover {
-    transform: scale(1.05);
-}
-
-/* Contact Section */
-.contact-section {
-    padding: 50px 20px;
-    background-color: #ffffff; /* White background for contact section */
-    text-align: center;
-}
-
-.contact-section form {
-    max-width: 500px;
-    margin: auto;
-}
-
-.contact-section input,
-.contact-section textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white for modern look */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    padding: 2rem;
+    text-align: center; /* Center text */
 }
 
 /* Footer Styles */
 footer {
-    background-color: #333;
-    color: #fff;
     text-align: center;
-    padding: 20px 0;
+    padding: 1rem;
+    background-color: #f9f9f9; /* Light background for footer */
+    border-top: 1px solid #ddd; /* Light border for separation */
+}
+
+footer p {
+    color: #555; /* Subtle text color */
 }
 
 footer ul {
@@ -217,12 +110,14 @@ footer ul {
 
 footer ul li {
     display: inline;
-    margin: 0 10px;
+    margin: 0 1rem; /* Space between footer links */
 }
 
-footer ul li a {
-    color: #fff;
-    text-decoration: none;
+footer a {
+    color: #2575fc; /* Link color */
+    text-decoration: none; /* Remove underline */
 }
 
-
+footer a:hover {
+    text-decoration: underline; /* Underline on hover for clarity */
+}

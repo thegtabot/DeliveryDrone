@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Drone Delivery Service</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login-styles.css') }}">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome for icons -->
 </head>
 <body>
@@ -12,45 +12,32 @@
         <div class="container">
             <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button> <!-- Dark mode toggle -->
             <div class="login-box">
-                <h2 style= "color: black;" > Login to Your Account</h2>
-                <form action="{{ url_for('login') }}" method="POST">
-                    <!-- Username input -->
+                <h2>Login to Your Account</h2>
+                <form action="{{ url_for('login') }}" method="POST" class="login-form">
                     <div class="input-group">
                         <label for="username">Username</label>
                         <i class="icon fas fa-user"></i> <!-- Username icon -->
                         <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     </div>
-
-                    <!-- Password input -->
                     <div class="input-group">
                         <label for="password">Password</label>
                         <i class="icon fas fa-lock"></i> <!-- Password icon -->
                         <input type="password" id="password" name="password" placeholder="Enter your password" required>
                     </div>
-
-                    <!-- Submit button -->
-                    <div class="input-group">
-                        <button type="submit" class="btn">Login</button>
+                    <div class="button-container">
+                        <button type="submit" class="login-btn">Login</button>
                     </div>
-
-                    <!-- Link to register page -->
-                    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
-
-                    <!-- Flash message display -->
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            <div class="flash-message">
-                                {% for message in messages %}
-                                    <p>{{ message }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% endwith %}
                 </form>
+                <div class="navigation-links">
+                    <p class="register-link">Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
+                    <button class="home-btn" onclick="window.location.href='{{ url_for('home') }}'">Back to Home</button> <!-- Back to Home button -->
+                </div>
             </div>
         </div>
     </div>
-
+    <footer class="footer">
+        <p>&copy; 2024 Fluxion Labs</p>
+    </footer>
     <script src="{{ url_for('static', filename='js/dark-mode.js') }}"></script> <!-- Link to dark mode script -->
 </body>
 </html>

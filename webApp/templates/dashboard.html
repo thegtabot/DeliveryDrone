@@ -5,28 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drone Dashboard</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard-styles.css') }}"> <!-- Link to the external CSS file -->
     <style>
         #user-map, #drone-map {
             height: 500px;
             width: 100%;
             margin-bottom: 20px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .welcome {
-            font-size: 1.5em;
-        }
-        .logout-btn {
-            background-color: black;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1em;
         }
         /* Marketplace styles */
         #marketplace {
@@ -36,6 +20,8 @@
             border: 1px solid #ccc;
             padding: 10px;
             margin: 10px 0;
+            border-radius: 8px; /* Rounded corners for product boxes */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
         }
         #cart {
             margin-top: 20px;
@@ -47,26 +33,47 @@
 <body>
     <div class="header">
         <div class="welcome">Welcome, {{ username }}!</div>
+
+        <!-- GPS Test Button -->
         <button id="get-coordinates-btn">Get GPS Coordinates</button>
         <p id="coordinates-output"></p>
     
+        <script>
+            $(document).ready(function() {
+                $('#get-coordinates-btn').click(function() {
+                    $.ajax({
+                        url: '/get-coordinates',
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('#coordinates-output').text('Latitude: ' + response.latitude + ', Longitude: ' + response.longitude);
+                            } else {
+                                $('#coordinates-output').text('Failed to get GPS coordinates.');
+                            }
+                        },
+                        error: function() {
+                            $('#coordinates-output').text('An error occurred.');
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <h2> 
+
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
         </form>
     </div>
 
-    <!-- Map Sections -->
-    <h2>Your Location</h2>
-    <div id="user-map"></div>
-
-    <h2>Drone Location</h2>
-    <div id="drone-map"></div>
+    <!-- Map Section -->
+    <div id="map"></div>
 
     <!-- Marketplace Section -->
     <div id="marketplace">
         <h2>Marketplace</h2>
         <div id="products">
-            <!-- Example Products -->
+            <!-- Example Product -->
             <div class="product">
                 <h3>Drone Battery</h3>
                 <p>High-capacity battery for extended drone flights.</p>
@@ -79,20 +86,49 @@
                 <p>Price: $15</p>
                 <button onclick="addToCart('Propeller Set', 15)">Add to Cart</button>
             </div>
-            <div class="product">
-                <h3>Engineering Degree</h3>
-                <p>It's dangerous to go alone! Take this incredibly expensive bachelor's degree!</p>
+            <!-- Add more products as needed -->
+             <div class = "product">
+                <h3> Engineering Degree </h3>
+                <p> It's dangerous to go alone! Take this incredibly expensive bachelor's degree! </p>
                 <p>Price: $90000</p>
                 <button onclick="addToCart('Engineering Degree', 90000)">Add to Cart</button>
-            </div>
+             </div>
         </div>
+        
     </div>
 
     <!-- Cart Section -->
     <div id="cart">
         <h3>Cart</h3>
+        <!-- Cart items will be displayed here -->
     </div>
+    <!-- Order Button-->
     <button onclick="placeOrder()">Order Now</button>
+
+    <script>
+        function placeOrder() {
+            fetch('{{ url_for("place_order") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cart: cart })  // Replace with your actual cart data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Order placed successfully!');
+                    cart = [];  // Clear cart
+                    updateCartDisplay();
+                } else {
+                    alert('Failed to place order.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        </script>
+
+
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>

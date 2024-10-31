@@ -19,6 +19,7 @@ body {
     align-items: center;
 }
 
+/* Overlay */
 .overlay {
     position: absolute;
     top: 0;
@@ -75,7 +76,7 @@ h2 {
 }
 
 /* Button Styles */
-.btn {
+.login-btn {
     width: 100%;
     padding: 1rem;
     background-color: #2575fc; /* Button color matching the background */
@@ -86,8 +87,26 @@ h2 {
     transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
 }
 
-.btn:hover {
+.login-btn:hover {
     background-color: #1e5cb7; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Home Button Styles */
+.home-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #00d4ff; /* Distinct color for visibility */
+    color: #ffffff; /* White text */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    margin-top: 1rem; /* Space above the button */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+.home-btn:hover {
+    background-color: #00a3cc; /* Darker shade on hover */
     transform: translateY(-2px); /* Lift effect on hover */
 }
 
@@ -97,25 +116,27 @@ p {
     color: #555; /* Subtle text color */
 }
 
-/* Flash Message */
-.flash-message {
+/* Register Link Styles */
+.register-link {
     margin-top: 1rem;
-    padding: 1rem;
-    background-color: #ffcccb; /* Light red background for alerts */
-    border: 1px solid #ff4d4d; /* Red border */
-    color: #d8000c; /* Dark red text */
-    border-radius: 4px;
-    text-align: center;
+    color: #555; /* Subtle text color */
 }
 
-/* Link Styles */
-a {
+.register-link a {
     color: #2575fc; /* Link color matching button */
     text-decoration: none; /* Remove underline */
 }
 
-a:hover {
+.register-link a:hover {
     text-decoration: underline; /* Underline on hover for clarity */
+}
+
+/* Footer Styles */
+.footer {
+    position: fixed;
+    bottom: 10px;
+    color: #ccc;
+    font-size: 0.9rem;
 }
 
 /* Dark Mode Styles */
@@ -134,13 +155,12 @@ body.dark-mode {
     color: #ffffff; /* Light text color */
 }
 
-.dark-mode .flash-message {
-    background-color: #d32f2f; /* Dark red for alerts in dark mode */
-    color: #ffffff; /* Light text color */
+.dark-mode .register-link {
+    color: #bbbbbb; /* Light text color for links */
 }
 
-.dark-mode a {
-    color: #bb86fc; /* Light purple for links in dark mode */
+.dark-mode .footer {
+    color: #bbbbbb; /* Light footer text */
 }
 
 /* Dark Mode Toggle Button */
