@@ -8,7 +8,7 @@ if %errorlevel% neq 0 (
 )
 
 :: Set the path to your PowerShell script using a relative path
-set "psScriptPath=Add-WireGuardDevice.ps1"
+set "psScriptPath=add_to_drone_network.ps1"
 
 :: Run the PowerShell script
 powershell -ExecutionPolicy Bypass -File "%psScriptPath%"
