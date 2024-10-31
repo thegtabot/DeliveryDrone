@@ -1,13 +1,23 @@
 # Variables
-# Default WireGuard config path
-$wgConfigPath = Join-Path -Path $userProfile -ChildPath "OneDrive\Documents\GitHub\DeliveryDrone\drone_network_config\DRONE.conf" 
+$userProfile = [Environment]::GetFolderPath("UserProfile")
+
+# If UserProfile is null, manually set it to the default location
+if (-not $userProfile) {
+    $userProfile = "C:\Users\$env:USERNAME"
+}
+
+# Construct the file path
+$folderPath = Join-Path -Path $userProfile -ChildPath "OneDrive\Documents\GitHub\DeliveryDrone\drone_network_config"
+$wgConfigPath = Join-Path -Path $folderPath -ChildPath "DRONE.conf"
+
+Write-Output "WireGuard Config Path: $wgConfigPath"
 
 # Get the device name
-$newDeviceName = $env:COMPUTERNAME  # Use the system's hostname as the device name
+$newDeviceName = $env:COMPUTERNAME
 
 # Define the subnet for the VPN
-$subnetBase = "10.0.0."  # Base of the subnet
-$subnetMask = 24  # Subnet mask (CIDR notation)
+$subnetBase = "10.0.0."
+$subnetMask = 24
 
 # Check if WireGuard config exists
 if (!(Test-Path -Path $wgConfigPath)) {
@@ -21,7 +31,8 @@ function Get-NextAvailableIP {
         $_.ToString().Split("=", 2)[1].Trim() -replace "/.*", ""
     }
 
-    for ($i = 1; $i -lt 255; $i++) {
+    for ($i = 4; $i -lt 255; $i++) {
+        # Skips 10.0.0.1, 10.0.0.2, and 10.0.0.3
         $newIP = $subnetBase + $i
         if ($newIP -notin $usedIPs) {
             return $newIP
@@ -36,7 +47,6 @@ $newDeviceIp = Get-NextAvailableIP
 
 # Generate key pair for the new device
 try {
-    # Generate keys (requires WireGuard's command-line tools installed)
     $privateKey = & wg genkey
     $publicKey = echo $privateKey | & wg pubkey
 }
@@ -63,8 +73,8 @@ catch {
 
 # Restart WireGuard service to apply changes
 try {
-    Stop-Service -Name "WireGuard" -Force
-    Start-Service -Name "WireGuard"
+    Stop-Service -Name "WireGuardManager" -Force
+    Start-Service -Name "WireGuardManager"
 }
 catch {
     Write-Output "Error: Could not restart the WireGuard service. Ensure you have administrator privileges."
