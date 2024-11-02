@@ -37,4 +37,4 @@ Run the add_to_drone_network.ps1 script included in the files.
 
 Part Three: 
 
-Contact Github owners to add your IP and public key to the wireguard conf file. 
+Contact Github owners to add your IP and public key to the wireguard conf file that the webserver is running.
