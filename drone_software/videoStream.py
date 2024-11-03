@@ -1,42 +1,41 @@
 import subprocess
 import requests
 import time
-import cv2
-import numpy as np
 
 # URL of the web server where the video will be sent
 server_url = 'http://<YOUR_MAIN_COMPUTER_IP>:5000/upload_video'  # Change this to your main computer's IP
 
 def stream_video():
     # Start capturing video using libcamera-vid and pipe the output
-    cmd = ['libcamera-vid', '--inline', '--nopreview', '--width', '640', '--height', '480', '--framerate', '30']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    cmd = ['libcamera-vid', '--inline', '--nopreview', '--width', '640', '--height', '480', '--framerate', '30', '-o', '-']
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    # Read frames from the process output
-    while True:
-        # Read one frame from stdout
-        frame_data = process.stdout.read(640 * 480 * 2)  # Adjusted for YUV format
+    try:
+        while True:
+            # Read the H264 data from stdout
+            h264_data = process.stdout.read(1024 * 1024)  # Read in chunks, adjust size if necessary
 
-        if not frame_data:
-            print("Failed to grab frame, retrying...")
-            time.sleep(0.1)  # Wait before retrying
-            continue  # Skip to the next iteration
+            if not h264_data:
+                print("Failed to grab frame, retrying...")
+                time.sleep(0.1)  # Wait before retrying
+                continue  # Skip to the next iteration
 
-        # Convert YUV to RGB using OpenCV
-        yuv_frame = np.frombuffer(frame_data, dtype=np.uint8).reshape((480, 640, 2))
-        frame = cv2.cvtColor(yuv_frame, cv2.COLOR_YUV2BGR_I420)
+            # Send the H264 data to the web server
+            try:
+                # Make sure the content type is set correctly
+                headers = {'Content-Type': 'application/octet-stream'}
+                response = requests.post(server_url, data=h264_data, headers=headers)
+                
+                if response.status_code != 200:
+                    print(f"Failed to send frame: {response.status_code}")
+            except Exception as e:
+                print(f"Error sending frame: {e}")
 
-        # Encode the frame as JPEG
-        _, buffer = cv2.imencode('.jpg', frame)
-        jpg_as_text = buffer.tobytes()
+            time.sleep(0.1)  # Optional: Add a small delay to limit the frame rate
 
-        # Send the frame to the web server
-        try:
-            requests.post(server_url, data=jpg_as_text)
-        except Exception as e:
-            print(f"Error sending frame: {e}")
-
-        time.sleep(0.1)  # Optional: Add a small delay to limit the frame rate
+    except KeyboardInterrupt:
+        process.terminate()
+        print("Stream terminated.")
 
 if __name__ == '__main__':
     stream_video()
