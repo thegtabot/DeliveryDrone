@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 # URL of the web server where the video will be sent
-server_url = '10.0.0.1:5000/upload_video'  # Change this to your main computer's IP
+server_url = 'http://<YOUR_MAIN_COMPUTER_IP>:5000/upload_video'  # Change this to your main computer's IP
 
 def stream_video():
     # Start capturing video using libcamera-vid and pipe the output
@@ -15,15 +15,16 @@ def stream_video():
     # Read frames from the process output
     while True:
         # Read one frame from stdout
-        frame_data = process.stdout.read(640 * 480 * 3)  # Assuming RGB format
+        frame_data = process.stdout.read(640 * 480 * 2)  # Adjusted for YUV format
 
         if not frame_data:
             print("Failed to grab frame, retrying...")
             time.sleep(0.1)  # Wait before retrying
             continue  # Skip to the next iteration
 
-        # Convert the byte data into a numpy array
-        frame = np.frombuffer(frame_data, dtype=np.uint8).reshape((480, 640, 3))
+        # Convert YUV to RGB using OpenCV
+        yuv_frame = np.frombuffer(frame_data, dtype=np.uint8).reshape((480, 640, 2))
+        frame = cv2.cvtColor(yuv_frame, cv2.COLOR_YUV2BGR_I420)
 
         # Encode the frame as JPEG
         _, buffer = cv2.imencode('.jpg', frame)
