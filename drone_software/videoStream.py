@@ -26,14 +26,19 @@ def stream_video():
                 headers = {'Content-Type': 'application/octet-stream'}
                 response = requests.post(server_url, data=h264_data, headers=headers)
                 
-                if response.status_code != 200:
-                    print(f"Failed to send frame: {response.status_code}")
+                if response.status_code != 204:
+                    print(f"Failed to send frame: {response.status_code} - {response.text}")
             except Exception as e:
                 print(f"Error sending frame: {e}")
 
             time.sleep(0.1)  # Optional: Add a small delay to limit the frame rate
 
     except KeyboardInterrupt:
+        print("Terminating video stream...")
+        process.terminate()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
         process.terminate()
         print("Stream terminated.")
 
