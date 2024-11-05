@@ -2,60 +2,47 @@ from dronekit import connect, VehicleMode
 import time
 
 # Connect to the Vehicle via UART GPIO
-connection_string = '/dev/ttyAMA0'  # Set to /dev/ttyAMA0 for UART connection
+connection_string = '/dev/ttyAMA0'
 vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
 
 def disable_failsafes():
-    print("Connected to vehicle:", vehicle)
-    '''
+    print("Disabling failsafes...")
     try:
-        vehicle.parameters['FENCE_ENABLE'] = 0  # Disable geofence
-    except Exception as e:
-        print(f"Error disabling FENCE_ENABLE: {e}")
-    
-    '''
-    try:
-        vehicle.parameters['RC_FAILSAFE'] = 0  # Disable RC failsafe
+        vehicle.parameters['RC_FAILSAFE'] = 0
     except Exception as e:
         print(f"Error disabling RC_FAILSAFE: {e}")
-    
-
     try:
-        vehicle.parameters['FS_OPTIONS'] = 0 
+        vehicle.parameters['FS_OPTIONS'] = 0
     except Exception as e:
         print(f"Error disabling FS_OPTIONS: {e}")
     try:
-        vehicle.parameters['COMPASS_USE'] = 0  # Use only the primary compass
+        vehicle.parameters['COMPASS_USE'] = 0
     except Exception as e:
         print(f"Error disabling COMPASS_USE: {e}")
-    vehicle.parameters['ARMING_CHECK'] = 0
-    
-
+    try:
+        vehicle.parameters['ARMING_CHECK'] = 0
+    except Exception as e:
+        print(f"Error disabling ARMING_CHECK: {e}")
 
 def arm_and_takeoff(target_altitude):
-    # Wait for the vehicle to initialize
-    vehicle.mode = VehicleMode("LOITER")
-    print("GPS Status:", vehicle.gps_0)
-
-    while vehicle.mode.name != "LOITER":  # Wait until mode has changed
-        print(" Waiting for mode change to LOITER...")
+    # Set GUIDED mode
+    vehicle.mode = VehicleMode("GUIDED")
+    while vehicle.mode.name != "GUIDED":
+        print(" Waiting for mode change to GUIDED...")
         time.sleep(1)
 
+    # Wait for vehicle to become armable
     while not vehicle.is_armable:
-        print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}, Mode: {vehicle.mode.name}")
+        print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}")
         time.sleep(1)
 
     # Arm the vehicle
-    vehicle.arm()
-    print("Vehicle is now armed. Mode set to GUIDED.")
-    time.sleep(3)
-
-    # Confirm the vehicle is armed
+    vehicle.armed = True
     while not vehicle.armed:
         print(" Waiting for arming...")
         time.sleep(1)
 
-    print("Vehicle is armed")
+    print("Vehicle is armed. Taking off!")
 
     # Take off
     vehicle.simple_takeoff(target_altitude)
@@ -63,43 +50,34 @@ def arm_and_takeoff(target_altitude):
     # Wait until the vehicle reaches a safe height
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
-        if vehicle.location.global_relative_frame.alt >= target_altitude * 0.95:  # 95% of target altitude
+        if vehicle.location.global_relative_frame.alt >= target_altitude * 0.95:
             print("Reached target altitude")
             break
         time.sleep(1)
 
 def main():
-    target_altitude = 2  # Target altitude in feet
-    target_altitude_meters = target_altitude * 0.3048  # Convert feet to meters
+    target_altitude_ft = 3
+    target_altitude_m = target_altitude_ft * 0.3048  # Convert feet to meters
 
-    disable_failsafes()  # Disable the failsafes
-    arm_and_takeoff(target_altitude_meters)  # Arm and take off to the target altitude
+    disable_failsafes()
+    arm_and_takeoff(target_altitude_m)
 
-    print("Hovering for 5 seconds...")
-    time.sleep(5)  # Hover for 5 seconds
+    print("Hovering for 10 seconds...")
+    time.sleep(10)
 
     print("Landing...")
-    vehicle.mode = VehicleMode("LAND")  # Switch to land mode
-
-    # Wait until the vehicle lands
+    vehicle.mode = VehicleMode("LAND")
     while vehicle.armed:
         print(" Vehicle is still armed, waiting to land...")
         time.sleep(1)
 
-        # Re-enable failsafe parameters
-    vehicle.parameters['FS_THR_ENABLE'] = 1  # Enable throttle failsafe
-    vehicle.parameters['FS_OPTIONS'] = 1      # Enable all failsafe options
-    vehicle.parameters['NAV_RCL_ACT'] = 1     # Enable return to launch on radio failsafe
-
-    vehicle.flush()
-
+    # Re-enable failsafes
+    vehicle.parameters['FS_THR_ENABLE'] = 1
+    vehicle.parameters['FS_OPTIONS'] = 1
+    vehicle.parameters['NAV_RCL_ACT'] = 1
 
     print("Landed successfully!")
 
-    
-
 if __name__ == "__main__":
     main()
-
-    # Close vehicle object
     vehicle.close()
