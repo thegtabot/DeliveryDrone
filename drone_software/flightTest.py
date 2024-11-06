@@ -7,22 +7,19 @@ vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
 
 def disable_failsafes():
     print("Disabling failsafes...")
-    try:
-        vehicle.parameters['RC_FAILSAFE'] = 0
-    except Exception as e:
-        print(f"Error disabling RC_FAILSAFE: {e}")
-    try:
-        vehicle.parameters['FS_OPTIONS'] = 0
-    except Exception as e:
-        print(f"Error disabling FS_OPTIONS: {e}")
-    try:
-        vehicle.parameters['COMPASS_USE'] = 0
-    except Exception as e:
-        print(f"Error disabling COMPASS_USE: {e}")
-    try:
-        vehicle.parameters['ARMING_CHECK'] = 0
-    except Exception as e:
-        print(f"Error disabling ARMING_CHECK: {e}")
+    failsafe_params = {
+        'RC_FAILSAFE': 0,
+        'FS_OPTIONS': 0,
+        'COMPASS_USE': 0,
+        'ARMING_CHECK': 0
+    }
+    for param, value in failsafe_params.items():
+        try:
+            vehicle.parameters[param] = value
+            print(f"Set {param} to {value}")
+            time.sleep(1)  # Add a delay to ensure parameters are set
+        except Exception as e:
+            print(f"Error setting {param}: {e}")
 
 def arm_and_takeoff(target_altitude):
     # Set GUIDED mode
@@ -31,10 +28,14 @@ def arm_and_takeoff(target_altitude):
         print(" Waiting for mode change to GUIDED...")
         time.sleep(1)
 
-    # Wait for vehicle to become armable
+    # Wait for vehicle to become armable with a timeout
+    start_time = time.time()
     while not vehicle.is_armable:
         print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}")
         time.sleep(1)
+        if time.time() - start_time > 30:  # Timeout after 30 seconds
+            print("Vehicle is not armable. Check sensors and parameters.")
+            return False
 
     # Arm the vehicle
     vehicle.armed = True
@@ -54,13 +55,16 @@ def arm_and_takeoff(target_altitude):
             print("Reached target altitude")
             break
         time.sleep(1)
+    return True
 
 def main():
     target_altitude_ft = 3
     target_altitude_m = target_altitude_ft * 0.3048  # Convert feet to meters
 
     disable_failsafes()
-    arm_and_takeoff(target_altitude_m)
+    if not arm_and_takeoff(target_altitude_m):
+        print("Takeoff aborted due to initialization failure.")
+        return
 
     print("Hovering for 10 seconds...")
     time.sleep(10)
