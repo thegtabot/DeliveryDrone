@@ -21,14 +21,14 @@ def disable_failsafes():
         except Exception as e:
             print(f"Error setting {param}: {e}")
 
-def arm_and_takeoff(target_altitude):
-    # Set GUIDED mode
-    vehicle.mode = VehicleMode("GUIDED")
-    while vehicle.mode.name != "GUIDED":
-        print(" Waiting for mode change to GUIDED...")
+def arm_and_hover(target_altitude):
+    # Set ALT_HOLD mode
+    vehicle.mode = VehicleMode("ALT_HOLD")
+    while vehicle.mode.name != "ALT_HOLD":
+        print(" Waiting for mode change to ALT_HOLD...")
         time.sleep(1)
 
-    # Wait for vehicle to become armable with a timeout
+    # Wait for vehicle to become armable
     start_time = time.time()
     while not vehicle.is_armable:
         print(f"Waiting for vehicle to initialize. Status: {vehicle.system_status.state}")
@@ -43,12 +43,12 @@ def arm_and_takeoff(target_altitude):
         print(" Waiting for arming...")
         time.sleep(1)
 
-    print("Vehicle is armed. Taking off!")
+    print("Vehicle is armed. Hovering at target altitude!")
 
-    # Take off
-    vehicle.simple_takeoff(target_altitude)
+    # Hold the throttle to reach and maintain target altitude
+    vehicle.simple_takeoff(target_altitude)  # Initial takeoff to reach altitude
 
-    # Wait until the vehicle reaches a safe height
+    # Monitor altitude
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         if vehicle.location.global_relative_frame.alt >= target_altitude * 0.95:
@@ -62,8 +62,8 @@ def main():
     target_altitude_m = target_altitude_ft * 0.3048  # Convert feet to meters
 
     disable_failsafes()
-    if not arm_and_takeoff(target_altitude_m):
-        print("Takeoff aborted due to initialization failure.")
+    if not arm_and_hover(target_altitude_m):
+        print("Hover test aborted due to initialization failure.")
         return
 
     print("Hovering for 10 seconds...")
