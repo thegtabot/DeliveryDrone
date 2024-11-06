@@ -8,7 +8,7 @@ vehicle = connect(connection_string, baud=57600, wait_ready=True, timeout=30)
 def disable_failsafes():
     print("Disabling failsafes...")
     failsafe_params = {
-        'RC_FAILSAFE': 0,
+        #'RC_FAILSAFE': 0,
         'FS_OPTIONS': 0,
         'COMPASS_USE': 0,
         'ARMING_CHECK': 0
