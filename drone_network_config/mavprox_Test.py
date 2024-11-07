@@ -16,9 +16,10 @@ patterns = {
 
 # Command to run MAVProxy with the correct path to mavproxy.py in the virtual environment
 command = [
-    "wsl", "python3", "/mnt/c/Users/gtas3/Desktop/DeliveryDrone/DeliveryDrone/.venv/Scripts/mavproxy.py",  # Use full path to mavproxy.py
+    "/mnt/c/Users/gtas3/Desktop/DeliveryDrone/DeliveryDrone/myenv/bin/python3",  # Correct path to python3 in your environment
+    "/mnt/c/Users/gtas3/Desktop/DeliveryDrone/DeliveryDrone/myenv/bin/mavproxy.py",  # Path to mavproxy.py
     "--master", f"udp:{raspberry_pi_ip}:{mavproxy_port}",
-    "--out", "udp:0.0.0.0:14551",  # Example for the output (you can change it as needed)
+    "--out", "udp:0.0.0.0:14551",  # Adjust the output as needed
     "--logfile", "mavproxy_log.txt",  # Optional: log the output to a file
 ]
 
@@ -37,4 +38,27 @@ data = {
 # Output from the MAVProxy
 try:
     while True:
-        # Continuously read and print the output from
+        # Continuously read and print the output from MAVProxy
+        output = process.stdout.readline()
+        if output == b"" and process.poll() is not None:
+            break
+        if output:
+            output_str = output.decode("utf-8").strip()
+            print(output_str)
+
+            # Check if any pattern matches the output
+            for key, pattern in patterns.items():
+                match = pattern.search(output_str)
+                if match:
+                    data[key] = match.group(1)  # Store matched value in the dictionary
+
+        time.sleep(0.1)  # Sleep to avoid maxing out the CPU
+
+except KeyboardInterrupt:
+    print("\nScript interrupted. Closing connection...")
+    process.terminate()
+
+# Print the extracted data
+print("\nExtracted Data:")
+for key, value in data.items():
+    print(f"{key}: {value}")
