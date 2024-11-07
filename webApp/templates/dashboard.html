@@ -171,14 +171,22 @@
     <section class="request-changes">
         <h2>Request Account Changes</h2>
         <form action="{{ url_for('request_changes') }}" method="post">
+
+            <!-- User request to change their username -->
             <label for="new-username">New Username:</label>
             <input type="text" id="new-username" name="new_username">
+
+            <!-- User request to change their password -->
 
             <label for="new-password">New Password:</label>
             <input type="password" id="new-password" name="new_password">
 
+            <!-- User request to change their homeo address -->
+
             <label for="new-address">New Address:</label>
             <input type="text" id="new-address" name="new_address">
+
+            <!-- Submit what they want to and it will change automatically! -->
 
             <button type="submit">Submit Request</button>
         </form>
@@ -186,7 +194,7 @@
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Initialize the user map
+        // Initialize the user map 
         var userMap = L.map('user-map').setView([0, 0], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -212,7 +220,7 @@
                 .catch(error => console.error('Error fetching user data:', error));
         }
 
-        // Initialize the drone map
+        // Initialize the drone map. It will give live updates about where the drone is to the customer.
         var droneMap = L.map('drone-map').setView([0, 0], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -243,7 +251,7 @@
             fetchDroneLocation();
         };
 
-        // Marketplace functionality
+        // Marketplace functionality this is where users will be buying their items from then they will be shipped!
         let cart = [];
 
         function addToCart(productName, price) {
