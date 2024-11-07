@@ -34,7 +34,7 @@
             padding-top: 10px;
         }
         .admin-btn {
-            background-color: #008CBA; /* Different color for Admin button */
+            background-color: #008CBA;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -47,36 +47,50 @@
         .admin-btn:hover {
             background-color: #005f73;
         }
+
+        /* Request Changes Section */
+        .request-changes {
+            margin-top: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .request-changes h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .request-changes label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .request-changes input[type="text"],
+        .request-changes input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .request-changes button {
+            background-color: #2575fc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .request-changes button:hover {
+            background-color: #1e5cb7;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="welcome">Welcome, {{ username }}!</div>
-
-        <!-- GPS Test Button -->
-        <button id="get-coordinates-btn">Get GPS Coordinates</button>
-        <p id="coordinates-output"></p>
-
-        <script>
-            $(document).ready(function() {
-                $('#get-coordinates-btn').click(function() {
-                    $.ajax({
-                        url: '/get-coordinates',
-                        method: 'GET',
-                        success: function(response) {
-                            if (response.status === 'success') {
-                                $('#coordinates-output').text('Latitude: ' + response.latitude + ', Longitude: ' + response.longitude);
-                            } else {
-                                $('#coordinates-output').text('Failed to get GPS coordinates.');
-                            }
-                        },
-                        error: function() {
-                            $('#coordinates-output').text('An error occurred.');
-                        }
-                    }); // <-- Semicolon added here
-                });
-            });
-        </script>
 
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
@@ -130,30 +144,17 @@
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Initialize the user map
-        var userMap = L.map('user-map').setView([0, 0], 13);
+        // Initialize the user map with coordinates from backend
+        const userLat = {{ user_lat | safe }};
+        const userLon = {{ user_lon | safe }};
+
+        const userMap = L.map('user-map').setView([userLat, userLon], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(userMap);
-        var userMarker = L.marker([0, 0]).addTo(userMap);
 
-        function updateUserPosition(lat, lng) {
-            userMarker.setLatLng([lat, lng]);
-            userMap.setView([lat, lng], 13);
-        }
-
-        function fetchUserLocation() {
-            fetch('/get-coordinates')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        updateUserPosition(data.latitude, data.longitude);
-                    } else {
-                        console.error('Failed to get user location:', data.message);
-                    }
-                })
-                .catch(error => console.error('Error fetching user data:', error));
-        }
+        const userMarker = L.marker([userLat, userLon]).addTo(userMap);
+        userMarker.bindPopup("<b>Your location</b>").openPopup();
 
         // Initialize the drone map
         var droneMap = L.map('drone-map').setView([0, 0], 13);
@@ -182,7 +183,6 @@
 
         // Fetch both locations on page load
         window.onload = function() {
-            fetchUserLocation();
             fetchDroneLocation();
         };
 
