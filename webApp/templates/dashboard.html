@@ -33,6 +33,20 @@
             border-top: 1px solid #000;
             padding-top: 10px;
         }
+        .admin-btn {
+            background-color: #008CBA; /* Different color for Admin button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .admin-btn:hover {
+            background-color: #005f73;
+        }
     </style>
 </head>
 <body>
@@ -59,7 +73,7 @@
                         error: function() {
                             $('#coordinates-output').text('An error occurred.');
                         }
-                    });
+                    }); // <-- Semicolon added here
                 });
             });
         </script>
@@ -67,6 +81,9 @@
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
         </form>
+
+        <!-- Admin Controls Button -->
+        <button onclick="window.location.href='{{ url_for('admin_controls') }}'" class="admin-btn">Admin Controls</button>
     </div>
 
     <!-- Map Section -->
@@ -76,18 +93,8 @@
     <div class="map-label">Drone Location Map</div>
     <div id="drone-map"></div>
 
-
-
-
-    <title>Camera Stream</title>
-</head>
-<body>
     <h1>Raspberry Pi Camera Stream</h1>
     <img src="/video_feed" alt="Camera Stream">
-</body>
-
-
-
 
     <!-- Marketplace Section -->
     <div id="marketplace">
@@ -178,9 +185,6 @@
             fetchUserLocation();
             fetchDroneLocation();
         };
-
-
-
 
         // Marketplace functionality
         let cart = [];

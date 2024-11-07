@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Controls</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-styles.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="welcome">Admin Controls</div>
+        <form action="{{ url_for('logout') }}" method="get">
+            <button class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <!-- Admin Options Section -->
+    <section class="admin-section">
+        <h2>Manage Account Settings</h2>
+        <div class="admin-options">
+            <button onclick="window.location.href='{{ url_for('change_username') }}'" class="admin-btn">Change Username</button>
+            <button onclick="window.location.href='{{ url_for('change_password') }}'" class="admin-btn">Change Password</button>
+            <button onclick="window.location.href='{{ url_for('manage_users') }}'" class="admin-btn">Manage Users</button>
+        </div>
+    </section>
+</body>
+</html>
