@@ -198,6 +198,7 @@
             userMap.setView([lat, lng], 13);
         }
 
+        //<!-- This will fetch  the users locations -->
         function fetchUserLocation() {
             fetch('/get-coordinates')
                 .then(response => response.json())
