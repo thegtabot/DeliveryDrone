@@ -61,6 +61,44 @@ def login():
 def dashboard():
     return render_template('dashboard.html', username=current_user.username)
 
+# Admin Controls Page
+@app.route('/admin_controls')
+@login_required
+def admin_controls():
+    return render_template('admin_controls.html')
+
+# Change Username
+@app.route('/change_username', methods=['GET', 'POST'])
+@login_required
+def change_username():
+    if request.method == 'POST':
+        new_username = request.form.get('username')
+        current_user.username = new_username
+        db.session.commit()
+        flash('Username updated successfully!')
+        return redirect(url_for('admin_controls'))
+    return render_template('change_username.html')
+
+# Change Password
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
+        current_user.password = hashed_password
+        db.session.commit()
+        flash('Password updated successfully!')
+        return redirect(url_for('admin_controls'))
+    return render_template('change_password.html')
+
+# Manage Users
+@app.route('/manage_users')
+@login_required
+def manage_users():
+    users = User.query.all()
+    return render_template('manage_users.html', users=users)
+
 # Fetch current drone location
 @app.route('/drone-location', methods=['GET'])
 @login_required
@@ -68,7 +106,7 @@ def drone_location_api():
     return jsonify(drone_location)
 
 # Update the drone's location (POST request sent by Raspberry Pi)
-@app.route('/update-drone-location', methods=['POST'])
+@app.route('/update_drone_location', methods=['POST'])
 def update_drone_location():
     global drone_location
     try:
@@ -112,9 +150,7 @@ def place_order():
 
     return redirect(url_for('dashboard'))
 
-
-
-@app.route('/get-coordinates', methods=['GET'])
+@app.route('/get_coordinates', methods=['GET'])
 @login_required
 def get_coordinates():
     address = current_user.address  # Get the address of the logged-in user
@@ -126,7 +162,6 @@ def get_coordinates():
         
     else:
         return jsonify({'status': 'error', 'message': 'Failed to get GPS coordinates'})
-
 
 @app.route('/logout')
 @login_required
