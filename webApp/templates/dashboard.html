@@ -92,6 +92,31 @@
     <div class="header">
         <div class="welcome">Welcome, {{ username }}!</div>
 
+        <!-- GPS Test Button -->
+        <button id="get-coordinates-btn">Get GPS Coordinates</button>
+        <p id="coordinates-output"></p>
+
+        <script>
+            $(document).ready(function() {
+                $('#get-coordinates-btn').click(function() {
+                    $.ajax({
+                        url: '/get-coordinates',
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('#coordinates-output').text('Latitude: ' + response.latitude + ', Longitude: ' + response.longitude);
+                            } else {
+                                $('#coordinates-output').text('Failed to get GPS coordinates.');
+                            }
+                        },
+                        error: function() {
+                            $('#coordinates-output').text('An error occurred.');
+                        }
+                    });
+                });
+            });
+        </script>
+
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
         </form>
@@ -142,19 +167,49 @@
     </div>
     <button onclick="placeOrder()">Order Now</button>
 
+    <!-- Request Changes Section -->
+    <section class="request-changes">
+        <h2>Request Account Changes</h2>
+        <form action="{{ url_for('request_changes') }}" method="post">
+            <label for="new-username">New Username:</label>
+            <input type="text" id="new-username" name="new_username">
+
+            <label for="new-password">New Password:</label>
+            <input type="password" id="new-password" name="new_password">
+
+            <label for="new-address">New Address:</label>
+            <input type="text" id="new-address" name="new_address">
+
+            <button type="submit">Submit Request</button>
+        </form>
+    </section>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Initialize the user map with coordinates from backend
-        const userLat = {{ user_lat | safe }};
-        const userLon = {{ user_lon | safe }};
-
-        const userMap = L.map('user-map').setView([userLat, userLon], 13);
+        // Initialize the user map
+        var userMap = L.map('user-map').setView([0, 0], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(userMap);
+        var userMarker = L.marker([0, 0]).addTo(userMap);
 
-        const userMarker = L.marker([userLat, userLon]).addTo(userMap);
-        userMarker.bindPopup("<b>Your location</b>").openPopup();
+        function updateUserPosition(lat, lng) {
+            userMarker.setLatLng([lat, lng]);
+            userMap.setView([lat, lng], 13);
+        }
+
+        function fetchUserLocation() {
+            fetch('/get-coordinates')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        updateUserPosition(data.latitude, data.longitude);
+                    } else {
+                        console.error('Failed to get user location:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error fetching user data:', error));
+        }
 
         // Initialize the drone map
         var droneMap = L.map('drone-map').setView([0, 0], 13);
@@ -183,6 +238,7 @@
 
         // Fetch both locations on page load
         window.onload = function() {
+            fetchUserLocation();
             fetchDroneLocation();
         };
 
