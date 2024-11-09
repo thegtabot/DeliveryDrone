@@ -1,2 +1,4 @@
 myenv/
 webApp/instance/db.sqlite3
+venv/
+ubuntu_venv/
