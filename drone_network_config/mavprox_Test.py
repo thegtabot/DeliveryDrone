@@ -14,11 +14,12 @@ patterns = {
     "PX4_hardware_version": re.compile(r"PX4v3 (\S+)"),
 }
 
-# Command to connect to the Raspberry Pi via MAVProxy
+# Command to run MAVProxy with the correct path to mavproxy.py in the virtual environment
 command = [
-    "mavproxy.py", 
+    "/mnt/c/Users/gtas3/Desktop/DeliveryDrone/DeliveryDrone/myenv/bin/python3",  # Correct path to python3 in your environment
+    "/mnt/c/Users/gtas3/Desktop/DeliveryDrone/DeliveryDrone/myenv/bin/mavproxy.py",  # Path to mavproxy.py
     "--master", f"udp:{raspberry_pi_ip}:{mavproxy_port}",
-    "--out", "udp:0.0.0.0:14551",  # Example for the output (you can change it as needed)
+    "--out", "udp:0.0.0.0:14551",  # Adjust the output as needed
     "--logfile", "mavproxy_log.txt",  # Optional: log the output to a file
 ]
 

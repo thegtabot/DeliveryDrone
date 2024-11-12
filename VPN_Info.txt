@@ -1,8 +1,0 @@
-Laptop 
-
-PrivateKey = CH/29CrdPYcOXG+EZ1j/7w4wSm8n0ak2NwXgBrPw+lw=
-PublicKey = XpLRFyvQGfAxqLpdmbY32bz53rmHjrxdCEJb1/76llk=
-
-Raspberry Pi 
-PrivateKey = uO5CjTSxckwFtzn6oFyq5HOTlt4Nux9kmfyUypbIjm0=
-PublicKey = wfjUZ2airglToRQA9XpKuQCb8TP2l2BG754i1JWGAV4=

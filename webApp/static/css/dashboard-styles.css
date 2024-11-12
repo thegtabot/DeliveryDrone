@@ -3,8 +3,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background-color: #ffffff; /* Light background for clarity */
-    color: #333; /* Default text color */
+    background-color: #ffffff;
+    color: #333;
 }
 
 /* Header Styles */
@@ -13,8 +13,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: #2575fc; /* Header background color */
-    color: white; /* Header text color */
+    background-color: #2575fc;
+    color: white;
 }
 
 /* Welcome Message */
@@ -24,76 +24,120 @@ body {
 
 /* Logout Button */
 .logout-btn {
-    background-color: black; /* Button color */
-    color: white; /* Button text color */
+    background-color: black;
+    color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
     font-size: 1em;
-    border-radius: 5px; /* Rounded corners for the button */
-    transition: background-color 0.3s ease; /* Transition effect */
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .logout-btn:hover {
-    background-color: #444; /* Darker shade on hover */
+    background-color: #444;
 }
 
 /* Map Section */
 #map {
     height: 500px;
     width: 100%;
-    margin-top: 20px; /* Space above the map */
+    margin-top: 20px;
 }
 
 /* Marketplace Section */
 #marketplace {
     margin-top: 20px;
-    padding: 20px; /* Padding for the marketplace */
-    border-top: 1px solid #ddd; /* Border above marketplace */
+    padding: 20px;
+    border-top: 1px solid #ddd;
 }
 
 .product {
-    border: 1px solid #ccc; /* Light border around products */
+    border: 1px solid #ccc;
     padding: 10px;
     margin: 10px 0;
-    border-radius: 5px; /* Rounded corners */
-    transition: box-shadow 0.3s ease; /* Transition effect */
+    border-radius: 5px;
+    transition: box-shadow 0.3s ease;
 }
 
 .product:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow effect on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Cart Section */
 #cart {
     margin-top: 20px;
-    border-top: 1px solid #000; /* Border above cart */
+    border-top: 1px solid #000;
     padding-top: 10px;
 }
 
 h2, h3 {
-    color: #1a1a1a; /* Darker text for headings */
+    color: #1a1a1a;
 }
 
 /* Order Button */
 button {
-    background-color: #2575fc; /* Button color */
-    color: white; /* Button text color */
+    background-color: #2575fc;
+    color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Transition effect */
-    margin-top: 10px; /* Space above button */
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #1e5cb7; /* Darker shade on hover */
+    background-color: #1e5cb7;
 }
 
 /* Output Styles */
 #coordinates-output {
-    margin-top: 10px; /* Space above coordinates output */
-    font-size: 1em; /* Standard font size */
-    color: #2575fc; /* Color for the coordinates output */
+    margin-top: 10px;
+    font-size: 1em;
+    color: #2575fc;
+}
+
+/* Request Account Changes Section */
+.request-changes {
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.request-changes h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.request-changes label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.request-changes input[type="text"],
+.request-changes input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.request-changes button {
+    background-color: #2575fc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.request-changes button:hover {
+    background-color: #1e5cb7;
 }
