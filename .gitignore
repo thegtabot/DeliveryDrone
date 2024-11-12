@@ -1,4 +1,8 @@
 myenv/
 webApp/instance/db.sqlite3
+<<<<<<< HEAD
 .venv/
+=======
+venv/
+>>>>>>> a2a5c9dafe529d68cc5df2c79f99f21865f82cff
 ubuntu_venv/
