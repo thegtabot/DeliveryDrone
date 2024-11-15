@@ -129,7 +129,9 @@ def set_location():
 
     current_user.address = address
     current_user.lat = lat
+    print('User lat: ', lat)
     current_user.lon = lon
+    print('User lon: ', lon)
     db.session.commit()
 
     flash('Location updated successfully!')
@@ -153,11 +155,26 @@ def place_order():
 @app.route('/get_coordinates', methods=['GET'])
 @login_required
 def get_coordinates():
+    
+    address = request.form.get('address')
+    lat, lon = geocode_address(address)
+    print(f"Debug: Geocoded address {address} to lat: {lat}, lon: {lon}")
+
+    current_user.address = address
+    current_user.lat = lat
+    print('User lat: ', lat)
+    current_user.lon = lon
+    print('User lon: ', lon)
+    db.session.commit()
+
     print("Debug: get_coordinates called")
     if current_user.lat and current_user.lon:
         return jsonify({'status': 'success', 'latitude': current_user.lat, 'longitude': current_user.lon})
     else:
-        return jsonify({'status': 'error', 'message': 'Failed to get GPS coordinates'})
+        print(f"Debug: User latitude: {current_user.lat}, longitude: {current_user.lon}")
+        return jsonify({'status': 'success', 'latitude': current_user.lat, 'longitude': current_user.lon})
+
+        #return jsonify({'status': 'error', 'message': 'Failed to get GPS coordinates'})
 
 @app.route('/request_changes', methods=['POST'])
 @login_required
