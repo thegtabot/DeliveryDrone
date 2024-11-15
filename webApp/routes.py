@@ -156,17 +156,8 @@ def place_order():
 @login_required
 def get_coordinates():
     
-    address = request.form.get('address')
-    lat, lon = geocode_address(address)
-    print(f"Debug: Geocoded address {address} to lat: {lat}, lon: {lon}")
 
-    current_user.address = address
-    current_user.lat = lat
-    print('User lat: ', lat)
-    current_user.lon = lon
-    print('User lon: ', lon)
-    db.session.commit()
-
+    
     print("Debug: get_coordinates called")
     if current_user.lat and current_user.lon:
         return jsonify({'status': 'success', 'latitude': current_user.lat, 'longitude': current_user.lon})
@@ -193,6 +184,20 @@ def request_changes():
     db.session.commit()
     flash('Account details updated successfully!')
     return redirect(url_for('dashboard'))
+
+
+
+@app.route('/drone-location')
+def drone_location():
+    try:
+        # Request the location from the Raspberry Pi via VPN
+        response = requests.get("http://10.0.0.2:5000/drone-location")
+        data = response.json()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
+
+
 
 @app.route('/logout')
 @login_required

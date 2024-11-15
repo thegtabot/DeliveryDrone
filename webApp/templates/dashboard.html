@@ -212,7 +212,7 @@
             console.log('fetchUserLocation() called')
             debugger;
 
-            fetch('/set_location', {headers: {'Content-Type': 'application/json'}})
+            fetch('/get_coordinates', {headers: {'Content-Type': 'application/json'}})
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
