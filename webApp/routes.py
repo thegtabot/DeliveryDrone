@@ -7,6 +7,7 @@ import requests
 from utils import geocode_address, send_delivery_request
 import sqlite3 
 
+
 # Global variable to store the drone's latest GPS coordinates
 drone_location = {'latitude': 0, 'longitude': 0}
 
