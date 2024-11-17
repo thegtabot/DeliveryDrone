@@ -112,8 +112,6 @@ def place_order():
 
     return redirect(url_for('dashboard'))
 
-
-
 @app.route('/get-coordinates', methods=['GET'])
 @login_required
 def get_coordinates():
@@ -127,9 +125,30 @@ def get_coordinates():
     else:
         return jsonify({'status': 'error', 'message': 'Failed to get GPS coordinates'})
 
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+# Request Changes Route
+@app.route('/request_changes', methods=['POST'])
+@login_required
+def request_changes():
+    new_username = request.form.get('new_username')
+    new_password = request.form.get('new_password')
+    new_address = request.form.get('new_address')
+
+    # Update user information if provided
+    if new_username:
+        current_user.username = new_username
+    if new_password:
+        current_user.password = generate_password_hash(new_password, method='pbkdf2:sha256')
+    if new_address:
+        current_user.address = new_address
+
+    # Commit changes to the database
+    db.session.commit()
+    flash('Your account changes have been submitted successfully.', 'success')
+
+    return redirect(url_for('dashboard'))
