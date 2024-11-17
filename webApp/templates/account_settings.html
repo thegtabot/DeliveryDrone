@@ -1,25 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Settings</title>
-</head>
-<body>
-    <h1>Account Settings</h1>
-    <form method="POST" action="{{ url_for('account_settings') }}">
-        <label for="new_username">New Username:</label>
-        <input type="text" id="new_username" name="new_username" value="{{ user.username }}">
-        
-        <label for="new_password">New Password:</label>
-        <input type="password" id="new_password" name="new_password">
-        
-        <label for="new_address">New Address:</label>
-        <input type="text" id="new_address" name="new_address" value="{{ user.address }}">
-        
-        <button type="submit">Save Changes</button>
-    </form>
+<!-- Request Changes Section -->
+<section class="request-changes">
+    <h2>Request Account Changes</h2>
+    <form action="{{ url_for('request_changes') }}" method="post">
 
-    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
-</body>
-</html>
+        <!-- User request to change their username -->
+        <label for="new-username">New Username:</label>
+        <input 
+            type="text" 
+            id="new-username" 
+            name="new_username" 
+            placeholder="Enter your new username" 
+            required 
+            minlength="3"
+            maxlength="20"
+        >
+
+        <!-- User request to change their password -->
+        <label for="new-password">New Password:</label>
+        <input 
+            type="password" 
+            id="new-password" 
+            name="new_password" 
+            placeholder="Enter your new password" 
+            required 
+            minlength="8"
+        >
+
+        <!-- User request to change their home address -->
+        <label for="new-address">New Address:</label>
+        <input 
+            type="text" 
+            id="new-address" 
+            name="new_address" 
+            placeholder="Enter your new home address" 
+            required 
+        >
+
+        <!-- Submit what they want to and it will change automatically! -->
+        <button type="submit">Submit Changes</button>
+    </form>
+</section>
