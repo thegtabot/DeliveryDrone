@@ -152,3 +152,32 @@ def request_changes():
     flash('Your account changes have been submitted successfully.', 'success')
 
     return redirect(url_for('dashboard'))
+
+
+@app.route('/account-settings', methods=['GET', 'POST'])
+@login_required
+def account_settings():
+    if request.method == 'POST':
+        # Process form data to update account settings
+        new_username = request.form.get('new_username')
+        new_password = request.form.get('new_password')
+        new_address = request.form.get('new_address')
+
+        # Add logic to validate and save changes to the database
+        if new_username:
+            # Update username in the database
+            current_user.username = new_username
+        if new_password:
+            # Update password securely (hash before saving)
+            current_user.set_password(new_password)
+        if new_address:
+            # Update address in the database
+            current_user.address = new_address
+
+        # Save changes to the database (commit if using SQLAlchemy)
+        db.session.commit()
+        flash('Your account settings have been updated.', 'success')
+        return redirect(url_for('account_settings'))
+
+    # Render account settings template
+    return render_template('account_settings.html', user=current_user)

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+</head>
+<body>
+    <h1>Account Settings</h1>
+    <form method="POST" action="{{ url_for('account_settings') }}">
+        <label for="new_username">New Username:</label>
+        <input type="text" id="new_username" name="new_username" value="{{ user.username }}">
+        
+        <label for="new_password">New Password:</label>
+        <input type="password" id="new_password" name="new_password">
+        
+        <label for="new_address">New Address:</label>
+        <input type="text" id="new_address" name="new_address" value="{{ user.address }}">
+        
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>
