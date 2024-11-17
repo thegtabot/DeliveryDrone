@@ -92,35 +92,12 @@
     <div class="header">
         <div class="welcome">Welcome, {{ username }}!</div>
 
-        <!-- GPS Test Button -->
-        <button id="get-coordinates-btn">Get GPS Coordinates</button>
-        <p id="coordinates-output"></p>
-
-        <script>
-            $(document).ready(function() {
-                $('#get-coordinates-btn').click(function() {
-                    $.ajax({
-                        url: '/get-coordinates',
-                        method: 'GET',
-                        success: function(response) {
-                            if (response.status === 'success') {
-                                $('#coordinates-output').text('Latitude: ' + response.latitude + ', Longitude: ' + response.longitude);
-                            } else {
-                                $('#coordinates-output').text('Failed to get GPS coordinates.');
-                            }
-                        },
-                        error: function() {
-                            $('#coordinates-output').text('An error occurred.');
-                        }
-                    });
-                });
-            });
-        </script>
-
+        <a href="{{ url_for('account_settings') }}" class="admin-btn">Account Settings</a>
+        
         <form action="{{ url_for('logout') }}" method="get">
             <button class="logout-btn">Logout</button>
         </form>
-        <a href="{{ url_for('account_settings') }}" class="admin-btn">Account Settings</a>
+       
        
     </div>
 
