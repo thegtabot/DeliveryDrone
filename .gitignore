@@ -1,1 +1,7 @@
 myenv/
+/venv
+/.venv
+/webApp/_pycache_
+/webApp/instance/db.sqlite3
+__pycache__/
+*.pyc
