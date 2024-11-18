@@ -2,7 +2,6 @@ from flask import Flask, jsonify, Response, request
 from dronekit import connect
 from flask_cors import CORS
 import subprocess
-import threading
 
 app = Flask(__name__)
 CORS(app)
@@ -35,24 +34,31 @@ def generate_video_stream():
     global video_process
     cmd = ['libcamera-vid', '--inline', '--nopreview', '--width', '640', '--height', '480', '--framerate', '30', '-o', '-']
     video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    
+
     try:
         while True:
             # Read video data from the process
             frame = video_process.stdout.read(1024 * 1024)  # Adjust chunk size if necessary
             if not frame:
                 break
-            yield frame
-    except GeneratorExit:       
-        print("Video stream closed.")
+            # Yield frame as part of a multipart response (MJPEG)
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    except Exception as e:
+        if isinstance(e, BrokenPipeError):
+            # Client disconnected, continue the process without termination
+            print("Client disconnected. Continuing to generate frames.")
+        else:
+            print(f"Error occurred: {e}")
     finally:
         if video_process:
             video_process.terminate()
+            print("Video process terminated.")
 
 # Endpoint for video streaming
 @app.route('/video-stream', methods=['GET'])
 def video_stream():
-    return Response(generate_video_stream(), mimetype='video/mp4')
+    return Response(generate_video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Endpoint to stop the video stream (optional)
 @app.route('/stop-video-stream', methods=['POST'])
