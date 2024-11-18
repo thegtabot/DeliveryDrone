@@ -30,12 +30,6 @@ def get_drone_coordinates():
             'message': str(e)
         }), 500
 
-
-
-# Endpoint for video streaming
-@app.route('/video-stream', methods=['GET'])
-def video_stream():
-    return Response(generate_video_stream(), mimetype='video/mp4')
 # Video streaming generator
 def generate_video_stream():
     global video_process
@@ -49,11 +43,17 @@ def generate_video_stream():
             if not frame:
                 break
             yield frame
-    except GeneratorExit:
+    except GeneratorExit:       
         print("Video stream closed.")
     finally:
         if video_process:
             video_process.terminate()
+
+# Endpoint for video streaming
+@app.route('/video-stream', methods=['GET'])
+def video_stream():
+    return Response(generate_video_stream(), mimetype='video/mp4')
+
 # Endpoint to stop the video stream (optional)
 @app.route('/stop-video-stream', methods=['POST'])
 def stop_video_stream():
