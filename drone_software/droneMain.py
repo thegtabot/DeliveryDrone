@@ -33,45 +33,28 @@ def get_drone_coordinates():
 # Video streaming generator
 def generate_video_stream():
     global video_process
-    cmd = [
-        'libcamera-vid',
-        '--inline',
-        '--nopreview',
-        '--width', '640',
-        '--height', '480',
-        '--framerate', '30',
-        '--codec', 'h264',
-        '--profile', 'baseline',
-        '--level', '4.2',
-        '--intra', '30',  # Add I-frames every 30 frames
-        '--output', '-'
-    ]
-    
+    cmd = ['libcamera-vid', '--inline', '--nopreview', '--width', '640', '--height', '480', '--framerate', '30', '-o', '-']
     video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
     try:
-        # Send SPS/PPS headers first
         while True:
-            frame = video_process.stdout.read(4096)  # Smaller chunk size for better streaming
+            # Read video data from the process
+            frame = video_process.stdout.read(1024 * 1024)  # Adjust chunk size if necessary
             if not frame:
                 break
-            yield (b'--frame\r\n'
-                   b'Content-Type: video/h264\r\n\r\n' + frame + b'\r\n')
-    except GeneratorExit:
+            yield frame
+    except GeneratorExit:   
         print("Video stream closed.")
     finally:
         if video_process:
             video_process.terminate()
 
 # Endpoint for video streaming
-@app.route('/video-stream')
+@app.route('/video-stream', methods=['GET'])
 def video_stream():
-    return Response(
-        generate_video_stream(),
-        mimetype='multipart/x-mixed-replace; boundary=frame'
-    )
+    return Response(generate_video_stream(), mimetype='video/mp4')
 
-# Endpoint to stop the video stream
+# Endpoint to stop the video stream (optional)
 @app.route('/stop-video-stream', methods=['POST'])
 def stop_video_stream():
     global video_process
