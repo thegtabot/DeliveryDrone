@@ -6,3 +6,6 @@ myenv/
 __pycache__/
 *.pyc
 *.pyc
+.venv/Lib/site-packages/__pycache__/typing_extensions.cpython-312.pyc
+/.venv
+*.pyc
