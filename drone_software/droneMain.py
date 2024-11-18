@@ -2,7 +2,6 @@ from flask import Flask, jsonify, Response, request
 from dronekit import connect
 from flask_cors import CORS
 import subprocess
-import threading
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +24,7 @@ def get_drone_coordinates():
             'longitude': location.lon
         })
     except Exception as e:
+        print("Error retrieving drone coordinates:", str(e))
         return jsonify({
             'status': 'error',
             'message': str(e)
@@ -33,25 +33,38 @@ def get_drone_coordinates():
 # Video streaming generator
 def generate_video_stream():
     global video_process
-    cmd = ['libcamera-vid', '--inline', '--nopreview', '--width', '640', '--height', '480', '--framerate', '30', '-o', '-']
-    video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    
+    cmd = [
+        'libcamera-vid', 
+        '--inline', 
+        '--nopreview', 
+        '--width', '640', 
+        '--height', '480', 
+        '--framerate', '30', 
+        '-o', '-'
+    ]
     try:
+        print("Starting video streaming subprocess...")
+        video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        
         while True:
-            # Read video data from the process
             frame = video_process.stdout.read(1024 * 1024)  # Adjust chunk size if necessary
             if not frame:
+                print("No more frames received from video process.")
                 break
             yield frame
-    except GeneratorExit:   
-        print("Video stream closed.")
+    except GeneratorExit:
+        print("Video stream closed by client.")
+    except Exception as e:
+        print("Error during video streaming:", str(e))
     finally:
         if video_process:
+            print("Terminating video streaming subprocess.")
             video_process.terminate()
 
 # Endpoint for video streaming
 @app.route('/video-stream', methods=['GET'])
 def video_stream():
+    print("Video stream endpoint accessed.")
     return Response(generate_video_stream(), mimetype='video/mp4')
 
 # Endpoint to stop the video stream (optional)
@@ -59,12 +72,15 @@ def video_stream():
 def stop_video_stream():
     global video_process
     if video_process:
+        print("Stopping video stream subprocess...")
         video_process.terminate()
         video_process = None
+        print("Video stream stopped successfully.")
         return jsonify({'status': 'success', 'message': 'Video stream stopped.'})
     else:
+        print("No video stream is currently running.")
         return jsonify({'status': 'error', 'message': 'No video stream running.'}), 400
 
 if __name__ == '__main__':
-    # Run the Flask app on all interfaces
-    app.run(host='0.0.0.0', port=5000, threaded=True)
+    print("Starting Flask application...")
+    app.run(host='0.0.0.0', port=5000)
