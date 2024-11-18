@@ -12,6 +12,16 @@ vehicle = connect('/dev/ttyAMA0', wait_ready=True, baud=57600)
 # Global variable for video streaming subprocess
 video_process = None
 
+# Root endpoint for quick app status check
+@app.route('/')
+def home():
+    return jsonify({'status': 'success', 'message': 'Drone app is running.'})
+
+# Handle favicon.ico requests
+@app.route('/favicon.ico')
+def favicon():
+    return "", 204  # No Content
+
 # Endpoint to get drone coordinates
 @app.route('/get-drone-coordinates', methods=['GET'])
 def get_drone_coordinates():
@@ -45,9 +55,13 @@ def generate_video_stream():
     try:
         print("Starting video streaming subprocess...")
         video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        
+
+        # Log stderr output from libcamera-vid
+        for line in video_process.stderr:
+            print("libcamera-vid error:", line.decode().strip())
+
         while True:
-            frame = video_process.stdout.read(1024 * 1024)  # Adjust chunk size if necessary
+            frame = video_process.stdout.read(1024 * 1024)
             if not frame:
                 print("No more frames received from video process.")
                 break
@@ -67,7 +81,7 @@ def video_stream():
     print("Video stream endpoint accessed.")
     return Response(generate_video_stream(), mimetype='video/mp4')
 
-# Endpoint to stop the video stream (optional)
+# Endpoint to stop the video stream
 @app.route('/stop-video-stream', methods=['POST'])
 def stop_video_stream():
     global video_process
