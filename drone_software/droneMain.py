@@ -18,7 +18,6 @@ video_process = None
 def get_drone_coordinates():
     try:
         location = vehicle.location.global_frame
-        print("Location: ", location.lat, location.lon)
         return jsonify({
             'status': 'success',
             'latitude': location.lat,
@@ -38,16 +37,23 @@ def generate_video_stream():
     
     try:
         while True:
+            # Check if the client disconnected
+            if request.is_disconnected():
+                print("Client disconnected. Closing video stream.")
+                break
+
             # Read video data from the process
             frame = video_process.stdout.read(1024 * 1024)  # Adjust chunk size if necessary
             if not frame:
                 break
             yield frame
-    except GeneratorExit:   
-        print("Video stream closed.")
+    except GeneratorExit:
+        # Log but don't print the message when the stream ends
+        pass
     finally:
         if video_process:
             video_process.terminate()
+            print("Video stream closed.")  # Only print this when the stream ends normally
 
 # Endpoint for video streaming
 @app.route('/video-stream', methods=['GET'])
@@ -66,5 +72,4 @@ def stop_video_stream():
         return jsonify({'status': 'error', 'message': 'No video stream running.'}), 400
 
 if __name__ == '__main__':
-    # Run the Flask app on all interfaces
     app.run(host='0.0.0.0', port=5000)
