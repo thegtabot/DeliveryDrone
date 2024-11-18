@@ -48,44 +48,7 @@
             background-color: #005f73;
         }
 
-        /* Request Changes Section */
-        .request-changes {
-            margin-top: 40px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .request-changes h2 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .request-changes label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        .request-changes input[type="text"],
-        .request-changes input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .request-changes button {
-            background-color: #2575fc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-        }
-        .request-changes button:hover {
-            background-color: #1e5cb7;
-        }
+        
     </style>
 </head>
 <body>
@@ -167,26 +130,7 @@
     </div>
     <button onclick="placeOrder()">Order Now</button>
 
-   <!-- Request Changes Section -->
-<section class="request-changes">
-    <h2>Request Account Changes</h2>
-    <form action="{{ url_for('request_changes') }}" method="post" style="display: flex; flex-direction: column; gap: 10px;">
-        <!-- User request to change their username -->
-        <label for="new-username">New Username:</label>
-        <input type="text" id="new-username" name="new_username">
-
-        <!-- User request to change their password -->
-        <label for="new-password">New Password:</label>
-        <input type="password" id="new-password" name="new_password">
-
-        <!-- User request to change their home address -->
-        <label for="new-address">New Address:</label>
-        <input type="text" id="new-address" name="new_address">
-
-        <!-- Submit button -->
-        <button type="submit">Submit Request</button>
-    </form>
-</section>
+  
 
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -229,7 +173,7 @@
         }
 
     function fetchDroneLocation() {
-        fetch('http://192.168.1.186:5000/get-drone-coordinates')
+        fetch('http://10.0.0.2:5000/get-drone-coordinates')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
