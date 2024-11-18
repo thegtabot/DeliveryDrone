@@ -1,0 +1,54 @@
+/* Request Changes Section */
+.request-changes {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px; /* Center and limit the form width */
+    background-color: #f9f9f9; /* Light background for contrast */
+    border: 1px solid #ddd; /* Border around the section */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.request-changes h2 {
+    color: #2575fc; /* Header color to match theme */
+    text-align: center; /* Center the heading */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+.request-changes label {
+    display: block; /* Block for proper spacing */
+    font-weight: bold; /* Highlight labels */
+    margin-bottom: 5px; /* Space between label and input */
+    color: #333; /* Standard text color */
+}
+
+.request-changes input {
+    width: 100%; /* Full width input */
+    padding: 10px; /* Inner padding for inputs */
+    margin-bottom: 15px; /* Space below inputs */
+    border: 1px solid #ccc; /* Border around inputs */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1em; /* Standard font size */
+    transition: border-color 0.3s ease; /* Transition effect */
+}
+
+.request-changes input:focus {
+    border-color: #2575fc; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
+}
+
+.request-changes button {
+    background-color: #2575fc; /* Button color */
+    color: white; /* Button text color */
+    border: none;
+    padding: 12px 20px; /* Larger padding for the button */
+    font-size: 1em; /* Standard font size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    width: 100%; /* Full-width button */
+    transition: background-color 0.3s ease; /* Hover effect */
+}
+
+.request-changes button:hover {
+    background-color: #1e5cb7; /* Darker shade on hover */
+}
