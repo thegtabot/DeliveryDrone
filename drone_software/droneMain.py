@@ -33,28 +33,45 @@ def get_drone_coordinates():
 # Video streaming generator
 def generate_video_stream():
     global video_process
-    cmd = ['libcamera-vid', '--inline', '--nopreview', '--width', '640', '--height', '480', '--framerate', '30', '-o', '-']
+    cmd = [
+        'libcamera-vid',
+        '--inline',
+        '--nopreview',
+        '--width', '640',
+        '--height', '480',
+        '--framerate', '30',
+        '--codec', 'h264',
+        '--profile', 'baseline',
+        '--level', '4.2',
+        '--intra', '30',  # Add I-frames every 30 frames
+        '--output', '-'
+    ]
+    
     video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
     try:
+        # Send SPS/PPS headers first
         while True:
-            # Read video data from the process
-            frame = video_process.stdout.read(1024 * 1024)  # Adjust chunk size if necessary
+            frame = video_process.stdout.read(4096)  # Smaller chunk size for better streaming
             if not frame:
                 break
-            yield frame
-    except GeneratorExit:   
+            yield (b'--frame\r\n'
+                   b'Content-Type: video/h264\r\n\r\n' + frame + b'\r\n')
+    except GeneratorExit:
         print("Video stream closed.")
     finally:
         if video_process:
             video_process.terminate()
 
 # Endpoint for video streaming
-@app.route('/video-stream', methods=['GET'])
+@app.route('/video-stream')
 def video_stream():
-    return Response(generate_video_stream(), mimetype='video/mp4')
+    return Response(
+        generate_video_stream(),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
 
-# Endpoint to stop the video stream (optional)
+# Endpoint to stop the video stream
 @app.route('/stop-video-stream', methods=['POST'])
 def stop_video_stream():
     global video_process
@@ -67,4 +84,4 @@ def stop_video_stream():
 
 if __name__ == '__main__':
     # Run the Flask app on all interfaces
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
