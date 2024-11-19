@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import subprocess
 import requests
 import time
@@ -47,6 +47,24 @@ def stream_video():
         process.terminate()
         print("Stream terminated.")
 
+def generate_video_stream():
+    # Use libcamera-vid to capture video
+    cmd = ['libcamera-vid', '--inline', '--nopreview', '-o', '-']
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    try:
+        while True:
+            # Read video data in chunks
+            data = process.stdout.read(1024 * 1024)  # 1 MB chunks
+            if not data:
+                break
+            yield data
+    except GeneratorExit:
+        process.terminate()
+    finally:
+        process.terminate()
+        print("Video stream terminated.")
+
 @app.route('/start_stream', methods=['POST'])
 def start_stream():
     global streaming
@@ -66,6 +84,19 @@ def stop_stream():
         return jsonify({"status": "Streaming stopped"}), 200
     else:
         return jsonify({"status": "Streaming is not active"}), 400
+
+@app.route('/video_stream', methods=['GET'])
+def video_stream():
+    return Response(generate_video_stream(), content_type='video/h264')
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204  # No Content
+
+# Handle unsupported methods gracefully
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return jsonify({"error": "Method not allowed"}), 405
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
