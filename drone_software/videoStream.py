@@ -95,7 +95,7 @@ def video_stream():
     return Response(generate_video_stream(), content_type='video/mp4')
 
 
-@app.route('/start_stream', methods=['POST'])
+@app.route('/start_stream', methods=['GET'])
 def start_stream():
     """
     Start streaming video to the remote server in the background.
@@ -110,7 +110,7 @@ def start_stream():
         return jsonify({"status": "Streaming already in progress"}), 400
 
 
-@app.route('/stop_stream', methods=['GET'])
+@app.route('/stop_stream', methods=['POST'])
 def stop_stream():
     """
     Stop video streaming.
