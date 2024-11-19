@@ -18,7 +18,7 @@ def stream_video_to_server():
     Capture video using libcamera-vid and send it to a remote server in chunks.
     """
     global streaming
-    cmd = ['libcamera-vid', '--inline', '--nopreview', '-o', '-']
+    cmd = ['libcamera-vid', '--inline', '--nopreview', '--timeout', '0', '-o', '-']
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     try:
@@ -56,7 +56,7 @@ def generate_video_stream():
     camera_cmd = [
         'libcamera-vid', '--inline', '--nopreview',
         '--width', '640', '--height', '480',
-        '--framerate', '30', '-o', '-'
+        '--framerate', '30', '--timeout', '0', '-o', '-'
     ]
     ffmpeg_cmd = [
         'ffmpeg',
