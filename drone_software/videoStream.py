@@ -51,40 +51,27 @@ def stream_video_to_server():
 
 
 def generate_video_stream():
-    """
-    Generate video stream by piping the output of libcamera-vid into ffmpeg
-    to convert it into a browser-compatible MP4 stream.
-    """
-    # Command to use ffmpeg for format conversion
-    ffmpeg_cmd = [
-        'ffmpeg',
-        '-i', '-',  # Input from stdin
-        '-c:v', 'libx264',  # Use H.264 codec
-        '-f', 'mp4',  # Output format
-        '-movflags', 'frag_keyframe+empty_moov',  # Web-compatible flags
-        'pipe:1'  # Output to stdout
-    ]
-
-    # Start the ffmpeg process
-    ffmpeg_process = subprocess.Popen(ffmpeg_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    # Command to capture raw video using libcamera-vid
-    camera_cmd = ['libcamera-vid', '--inline', '--nopreview', '-o', '-']
-    camera_process = subprocess.Popen(camera_cmd, stdout=ffmpeg_process.stdin, stderr=subprocess.PIPE)
-
+    cmd = ['cat', '/home/thegtabot/test_video.h264']  # Replace with a valid test video path
     try:
+        print("Starting video streaming subprocess with a test video...")
+        video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
         while True:
-            # Read video data in chunks from ffmpeg
-            data = ffmpeg_process.stdout.read(1024 * 1024)  # Read 1 MB chunks
-            if not data:
+            frame = video_process.stdout.read(1024 * 1024)
+            if not frame:
+                print("No more frames received from test video process.")
                 break
-            yield data
+            yield frame
     except GeneratorExit:
-        camera_process.terminate()
-        ffmpeg_process.terminate()
+        print("Video stream closed by client.")
+    except Exception as e:
+        print("Error during video streaming:", str(e))
     finally:
-        camera_process.terminate()
-        ffmpeg_process.terminate()
+        if video_process:
+            print("Terminating test video subprocess.")
+            video_process.terminate()
+            video_process = None
+
 
 
 @app.route('/video_stream', methods=['GET', 'POST'])
