@@ -7,7 +7,7 @@ server_url = 'http://10.0.0.1:5000/upload_video'  # Change this to your main com
 
 def stream_video():
     # Start capturing video using libcamera-vid and pipe the output
-    cmd = ['libcamera-vid', '--inline', '--nopreview', '--width', '640', '--height', '480', '--framerate', '30', '-o', '-']
+    cmd = ['libcamera-vid', '--inline', '--nopreview', '-o', '-']
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     try:
