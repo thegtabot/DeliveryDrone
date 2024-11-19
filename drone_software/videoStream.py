@@ -62,6 +62,7 @@ def generate_video_stream():
         'ffmpeg',
         '-i', '-',  # Input from stdin
         '-c:v', 'libx264',  # H.264 codec
+        '-preset', 'ultrafast',  # Minimize latency
         '-f', 'mp4',  # MP4 format
         '-movflags', 'frag_keyframe+empty_moov',  # Web-compatible flags
         'pipe:1'  # Output to stdout
