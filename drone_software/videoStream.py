@@ -5,12 +5,14 @@ app = Flask(__name__)
 
 def generate_video_stream():
     """
-    Generate a live video stream from the Raspberry Pi camera with low latency.
+    Generate a live video stream from the Raspberry Pi camera with low latency and flipped orientation.
     """
     camera_cmd = [
         'libcamera-vid', '--inline', '--nopreview', '--flush',
         '--width', '640', '--height', '480',
-        '--framerate', '30', '--timeout', '0', '-o', '-'
+        '--framerate', '30', '--timeout', '0', 
+        '--rotation', '180',  # Rotate the camera output by 180 degrees
+        '-o', '-'
     ]
 
     ffmpeg_cmd = [
