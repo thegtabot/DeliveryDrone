@@ -51,24 +51,30 @@ def stream_video_to_server():
 
 def generate_video_stream():
     """
-    Stream a pre-recorded test video, converting it from H264 to MP4 format.
+    Stream live video from the Raspberry Pi camera in real-time.
     """
-    h264_file = "/home/thegtabot/test_video.h264"  # Replace with the H264 video path
+    camera_cmd = [
+        'libcamera-vid', '--inline', '--nopreview',
+        '--width', '640', '--height', '480',
+        '--framerate', '30', '-o', '-'
+    ]
     ffmpeg_cmd = [
         'ffmpeg',
-        '-i', h264_file,  # Input H264 video file
-        '-c:v', 'libx264',  # Use H.264 codec
-        '-f', 'mp4',  # Output format
+        '-i', '-',  # Input from stdin
+        '-c:v', 'libx264',  # H.264 codec
+        '-f', 'mp4',  # MP4 format
         '-movflags', 'frag_keyframe+empty_moov',  # Web-compatible flags
         'pipe:1'  # Output to stdout
     ]
 
-    try:
-        print("Starting video streaming subprocess for MP4 conversion...")
-        video_process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # Start both subprocesses
+    camera_process = subprocess.Popen(camera_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ffmpeg_process = subprocess.Popen(ffmpeg_cmd, stdin=camera_process.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+    try:
         while True:
-            frame = video_process.stdout.read(1024 * 1024)  # Read 1 MB chunks
+            # Read and yield data in chunks
+            frame = ffmpeg_process.stdout.read(1024 * 1024)
             if not frame:
                 print("No more frames received from FFmpeg process.")
                 break
@@ -78,59 +84,54 @@ def generate_video_stream():
     except Exception as e:
         print(f"Error during video streaming: {e}")
     finally:
-        if video_process:
-            print("Terminating FFmpeg subprocess.")
-            video_process.terminate()
+        camera_process.terminate()
+        ffmpeg_process.terminate()
+        print("Video streaming subprocesses terminated.")
 
 
-@app.route('/video_stream', methods=['GET', 'POST'])
+@app.route('/video_stream', methods=['GET'])
 def video_stream():
     """
-    Flask route for streaming video to clients.
+    Flask route for real-time video streaming to clients.
     """
-    if request.method == 'POST':
-        return jsonify({"message": "This endpoint streams video; GET is recommended."}), 200
+    print("Real-time video stream endpoint accessed.")
     return Response(generate_video_stream(), content_type='video/mp4')
 
 
-@app.route('/start_stream', methods=['GET', 'POST'])
+@app.route('/start_stream', methods=['GET'])
 def start_stream():
     """
     Start streaming video to the remote server in the background.
     """
     global streaming
-    if request.method == 'POST':
-        return jsonify({"message": "Use GET to start the stream."}), 400
-
-    if not streaming:
-        streaming = True
-        thread = threading.Thread(target=stream_video_to_server)
-        thread.start()
-        return jsonify({"status": "Streaming started to server"}), 200
-    else:
+    if streaming:
         return jsonify({"status": "Streaming already in progress"}), 400
 
+    streaming = True
+    thread = threading.Thread(target=stream_video_to_server, daemon=True)
+    thread.start()
+    print("Started streaming to server in the background.")
+    return jsonify({"status": "Streaming started"}), 200
 
-@app.route('/stop_stream', methods=['GET', 'POST'])
+
+@app.route('/stop_stream', methods=['POST'])
 def stop_stream():
     """
-    Stop video streaming.
+    Stop background video streaming to the remote server.
     """
     global streaming
-    if request.method == 'GET':
-        return jsonify({"message": "Use POST to stop the stream."}), 400
-
-    if streaming:
-        streaming = False
-        return jsonify({"status": "Streaming stopped"}), 200
-    else:
+    if not streaming:
         return jsonify({"status": "Streaming is not active"}), 400
+
+    streaming = False
+    print("Stopped streaming to server.")
+    return jsonify({"status": "Streaming stopped"}), 200
 
 
 @app.route('/favicon.ico')
 def favicon():
     """
-    Handle browser requests for /favicon.ico.
+    Handle requests for /favicon.ico to suppress 404 errors.
     """
     return '', 204  # No Content
 
@@ -138,10 +139,11 @@ def favicon():
 @app.errorhandler(405)
 def method_not_allowed(e):
     """
-    Handle 405 Method Not Allowed errors.
+    Handle HTTP 405 Method Not Allowed errors.
     """
     return jsonify({"error": "Method not allowed", "method": request.method, "url": request.url}), 405
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    print("Starting Flask application...")
+    app.run(host='0.0.0.0', port=5000, threaded=True)
