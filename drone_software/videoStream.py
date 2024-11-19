@@ -3,7 +3,7 @@ import requests
 import time
 
 # URL of the web server where the video will be sent
-server_url = 'http://10.0.0.1:5000/upload_video'  # Change this to your main computer's IP
+server_url = 'http://192.168.1.104:5000/upload_video'  # Change this to your main computer's IP
 
 def stream_video():
     # Start capturing video using libcamera-vid and pipe the output

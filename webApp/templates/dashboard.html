@@ -173,7 +173,7 @@
         }
 
     function fetchDroneLocation() {
-        fetch('http://10.0.0.2:5000/get-drone-coordinates')
+        fetch('http://192.168.1.186:5000/get-drone-coordinates')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
