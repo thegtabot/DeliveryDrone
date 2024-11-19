@@ -110,7 +110,7 @@ def start_stream():
         return jsonify({"status": "Streaming already in progress"}), 400
 
 
-@app.route('/stop_stream', methods=['POST'])
+@app.route('/stop_stream', methods=['GET'])
 def stop_stream():
     """
     Stop video streaming.
