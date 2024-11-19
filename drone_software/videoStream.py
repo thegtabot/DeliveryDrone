@@ -18,7 +18,6 @@ def stream_video_to_server():
     Capture video using libcamera-vid and send it to a remote server in chunks.
     """
     global streaming
-    # Command to capture raw video using libcamera-vid
     cmd = ['libcamera-vid', '--inline', '--nopreview', '-o', '-']
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -30,9 +29,9 @@ def stream_video_to_server():
             if not h264_data:
                 print("Failed to grab frame, retrying...")
                 time.sleep(0.1)  # Wait before retrying
-                continue  # Skip to the next iteration
+                continue
 
-            # Send the H264 data to the web server
+            # Send the H264 data to the remote server
             try:
                 headers = {'Content-Type': 'application/octet-stream'}
                 response = requests.post(server_url, data=h264_data, headers=headers)
@@ -51,27 +50,37 @@ def stream_video_to_server():
 
 
 def generate_video_stream():
-    cmd = ['cat', '/home/thegtabot/test_video.h264']  # Replace with a valid test video path
+    """
+    Stream a pre-recorded test video, converting it from H264 to MP4 format.
+    """
+    h264_file = "/home/thegtabot/test_video.h264"  # Replace with the H264 video path
+    ffmpeg_cmd = [
+        'ffmpeg',
+        '-i', h264_file,  # Input H264 video file
+        '-c:v', 'libx264',  # Use H.264 codec
+        '-f', 'mp4',  # Output format
+        '-movflags', 'frag_keyframe+empty_moov',  # Web-compatible flags
+        'pipe:1'  # Output to stdout
+    ]
+
     try:
-        print("Starting video streaming subprocess with a test video...")
-        video_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("Starting video streaming subprocess for MP4 conversion...")
+        video_process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         while True:
-            frame = video_process.stdout.read(1024 * 1024)
+            frame = video_process.stdout.read(1024 * 1024)  # Read 1 MB chunks
             if not frame:
-                print("No more frames received from test video process.")
+                print("No more frames received from FFmpeg process.")
                 break
             yield frame
     except GeneratorExit:
         print("Video stream closed by client.")
     except Exception as e:
-        print("Error during video streaming:", str(e))
+        print(f"Error during video streaming: {e}")
     finally:
         if video_process:
-            print("Terminating test video subprocess.")
+            print("Terminating FFmpeg subprocess.")
             video_process.terminate()
-            video_process = None
-
 
 
 @app.route('/video_stream', methods=['GET', 'POST'])
