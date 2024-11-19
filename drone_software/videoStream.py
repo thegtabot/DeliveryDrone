@@ -87,20 +87,25 @@ def generate_video_stream():
         ffmpeg_process.terminate()
 
 
-@app.route('/video_stream', methods=['GET'])
+@app.route('/video_stream', methods=['GET', 'POST'])
 def video_stream():
     """
     Flask route for streaming video to clients.
     """
+    if request.method == 'POST':
+        return jsonify({"message": "This endpoint streams video; GET is recommended."}), 200
     return Response(generate_video_stream(), content_type='video/mp4')
 
 
-@app.route('/start_stream', methods=['GET'])
+@app.route('/start_stream', methods=['GET', 'POST'])
 def start_stream():
     """
     Start streaming video to the remote server in the background.
     """
     global streaming
+    if request.method == 'POST':
+        return jsonify({"message": "Use GET to start the stream."}), 400
+
     if not streaming:
         streaming = True
         thread = threading.Thread(target=stream_video_to_server)
@@ -110,12 +115,15 @@ def start_stream():
         return jsonify({"status": "Streaming already in progress"}), 400
 
 
-@app.route('/stop_stream', methods=['POST'])
+@app.route('/stop_stream', methods=['GET', 'POST'])
 def stop_stream():
     """
     Stop video streaming.
     """
     global streaming
+    if request.method == 'GET':
+        return jsonify({"message": "Use POST to stop the stream."}), 400
+
     if streaming:
         streaming = False
         return jsonify({"status": "Streaming stopped"}), 200
