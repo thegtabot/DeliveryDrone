@@ -5,27 +5,27 @@ app = Flask(__name__)
 
 def generate_video_stream():
     """
-    Generate a live video stream from the Raspberry Pi camera.
+    Generate a live video stream from the Raspberry Pi camera with low latency.
     """
-    # Command to capture live video from the camera
     camera_cmd = [
-        'libcamera-vid', '--inline', '--nopreview',
+        'libcamera-vid', '--inline', '--nopreview', '--flush',
         '--width', '640', '--height', '480',
         '--framerate', '30', '--timeout', '0', '-o', '-'
     ]
 
-    # Command to convert the raw H264 stream to browser-compatible MP4 format
     ffmpeg_cmd = [
         'ffmpeg',
         '-i', '-',  # Input from stdin
         '-c:v', 'libx264',  # H.264 codec
-        '-preset', 'ultrafast',  # Minimize latency
+        '-preset', 'ultrafast',  # Minimize encoding time
+        '-tune', 'zerolatency',  # Optimize for low latency
+        '-g', '30',  # GOP size
         '-f', 'mp4',  # MP4 format
         '-movflags', 'frag_keyframe+empty_moov',  # Web-compatible flags
+        '-threads', '2',  # Multi-threading
         'pipe:1'  # Output to stdout
     ]
 
-    # Start the camera and FFmpeg subprocesses
     try:
         print("Starting camera and FFmpeg processes for live streaming...")
         camera_process = subprocess.Popen(camera_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
